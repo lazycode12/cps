@@ -1,12 +1,12 @@
 package com.cps.app.mapper;
 
-import com.cps.app.dto.RoleDto;
+import com.cps.app.dto.response.RoleResponse;
 import com.cps.app.model.Role;
 
 public class RoleMapper {
 
-	public static RoleDto toDto(Role r) {
-		return new RoleDto(
+	public static RoleResponse toDto(Role r) {
+		return new RoleResponse(
 				r.getId(),
 				r.getNom(),
 				r.getDescription(),

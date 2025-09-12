@@ -28,7 +28,7 @@ public class Role {
 	@Column(name = "description", nullable = true)
 	private String description;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name="role_permission",
 			joinColumns = @JoinColumn(name = "role_id"),

@@ -1,0 +1,119 @@
+<!-- start side bar -->
+<app-side-bar [isOpen] = "isOpen"></app-side-bar>
+<!-- end sidebar -->
+
+<!-- start min top nav -->
+<app-nav-bar (toggle)="isOpen = !isOpen"></app-nav-bar>
+<!-- end min top nav -->
+
+<!-- start main -->
+<main [ngClass]="{'md:ml-64 md:w-[calc(100%-256px)]': isOpen, 'md:ml-0': !isOpen}" class="bg-gray-100 duration-500 w-full h-svh pt-16 overflow-y-scroll">
+
+    <section class="p-4 mt-4 text-black">
+        <div class="flex items-center justify-start gap-4 mt-3 mb-8">
+            <i class="pi pi-users text-gray-500 shadow-lg rounded-lg text-3xl p-2 "></i>
+            <h2 class="mb-2 text-3xl">gestion des medicaments</h2>
+        </div>
+
+      <div class="rounded-xl bg-white p-4 mt-4">
+        <div class="m-4">
+          <p-button (onClick)="showCreateDialog()" label="créer medicament"  icon="pi pi-plus" iconPos="right" [raised]="true"  severity="info" class="mx-3"/>
+        </div>
+        <p-table
+          [paginator]="true"
+          [rows]="5"
+          [value]="medicaments"
+          [loading]="loading"
+          stripedRows
+          showGridlines
+          [tableStyle]="{'min-width': '50rem'}">
+          <ng-template #header>
+            <tr>
+              <th>nom</th>
+              <th>qte</th>
+              <th>description</th>
+              <th>actions</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-medicament>
+              <tr class="bg-white border-b">
+                    <td class="px-6 py-4">{{medicament.nom}}</td>
+                    <td class="px-6 py-4">{{medicament.qte}}</td>
+                    <td class="px-6 py-4">{{medicament.description}}</td>
+                  <td class="px-6 py-4">
+                      <!-- <p-button (onClick)="showCompte()"  icon="pi pi-eye" [rounded]="true" [raised]="true"></p-button> -->
+                      <p-button (onClick)="showEditDialog(medicament)"  icon="pi pi-pencil" [rounded]="true" [raised]="true"  severity="info" class="mx-3"></p-button>
+                      <p-button (onClick)="deleteMedicament(medicament.id)"  icon="pi pi-trash" [rounded]="true" [raised]="true"  severity="danger"></p-button>
+                  </td>
+              </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+    </section>
+
+    <!-- compte creat form popup -->
+    <p-dialog header="créer un medicament" [modal]="true" [(visible)]="visible_create" [style]="{ width: '30rem' }">
+        <form [formGroup]="fg" (ngSubmit)="create()"  class="w-full p-4 border border-gray-300 bg-white" action="#" method="post">
+            <div class="grid grid-cols-2 gap-5 text-black">
+
+              <!-- nom -->
+              <div>
+                <label class="block mb-2 text-sm font-medium" for="">nom</label>
+                <input type="text" formControlName="nom" name="nom" class="block w-full p-2.5 text-sm bg-white border-gray-300 border rounded-lg focus:ring-blue-500 focus:border-blue-500"/>
+              </div>
+
+              <!-- qte -->
+              <div>
+                <label class="block mb-2 text-sm font-medium" for="">quantité</label>
+                <input type="text" formControlName="qte" name="qte" class="block w-full p-2.5 text-sm bg-white border-gray-300 border rounded-lg focus:ring-blue-500 focus:border-blue-500"/>
+              </div>
+
+              <!-- description -->
+              <div>
+                <label class="block mb-2 text-sm font-medium" for="">description</label>
+                <textarea formControlName="description" name="description" class="block w-full p-2.5 text-sm bg-white border-gray-300 border rounded-lg focus:ring-blue-500 focus:border-blue-500"></textarea>
+              </div>
+
+            </div>
+            <button type="submit" class="w-full mt-5 rounded-md bg-blue-600 text-center py-3 text-white">
+              créer compte
+            </button>
+          </form>
+    </p-dialog>
+
+    <!-- compte edit form popup -->
+    <p-dialog header="modifier ce medicament" [modal]="true" [(visible)]="visible_edit" [style]="{ width: '30rem' }">
+        <form [formGroup]="fg" (ngSubmit)="edit($event)"  class="w-full p-4 border border-gray-300 bg-white" action="#" method="post">
+            <div class="grid grid-cols-2 gap-5 text-black">
+
+              <!-- nom -->
+              <div>
+                <label class="block mb-2 text-sm font-medium" for="">nom</label>
+                <input type="text" formControlName="nom" name="nom" class="block w-full p-2.5 text-sm bg-white border-gray-300 border rounded-lg focus:ring-blue-500 focus:border-blue-500"/>
+              </div>
+
+              <!-- qte -->
+              <div>
+                <label class="block mb-2 text-sm font-medium" for="">quantité</label>
+                <input type="text" formControlName="qte" name="qte" class="block w-full p-2.5 text-sm bg-white border-gray-300 border rounded-lg focus:ring-blue-500 focus:border-blue-500"/>
+              </div>
+
+              <!-- description -->
+              <div>
+                <label class="block mb-2 text-sm font-medium" for="">description</label>
+                <textarea formControlName="description" name="description" class="block w-full p-2.5 text-sm bg-white border-gray-300 border rounded-lg focus:ring-blue-500 focus:border-blue-500"></textarea>
+              </div>
+
+            </div>
+            <button type="submit" class="w-full mt-5 rounded-md bg-blue-600 text-center py-3 text-white">
+              modifier
+            </button>
+          </form>
+    </p-dialog>
+    <!-- end compte edit form popup -->
+
+    <p-toast />
+    <p-confirmdialog />
+</main>
+<!-- end main -->

@@ -1,0 +1,95 @@
+<!-- start side bar -->
+<app-side-bar [isOpen] = "isOpen"></app-side-bar>
+<!-- end sidebar -->
+
+<!-- start min top nav -->
+<app-nav-bar (toggle)="isOpen = !isOpen"></app-nav-bar>
+<!-- end min top nav -->
+
+<!-- start main -->
+<main [ngClass]="{'md:ml-64 md:w-[calc(100%-256px)]': isOpen, 'md:ml-0': !isOpen}" class="bg-gray-100 duration-500 w-full h-svh pt-16 overflow-y-scroll">
+
+    <section class="p-4 mt-4 text-black">
+        <div class="flex items-center justify-start gap-4 mt-3 mb-8">
+            <i class="pi pi-users text-gray-500 shadow-lg rounded-lg text-3xl p-2 "></i>
+            <h2 class="mb-2 text-3xl font-bold">gestion des factures</h2>
+        </div>
+
+        <div class="rounded-xl bg-white p-4 mt-4">
+            <p-table
+                [paginator]="true"
+                [rows]="5"
+                [value]="factures"
+                stripedRows
+                showGridlines
+                [tableStyle]="{'min-width': '50rem'}">
+                <ng-template #header>
+                    <tr>
+                        <th>montant</th>
+                        <th>statut</th>
+                        <th>date de paiment</th>
+                        <th>Actions</th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-facture>
+                    <tr class="bg-white border-b">
+                        <td class="px-6 py-4">{{facture.montant}}</td>
+                        <td class="px-6 py-4">{{facture.statut}}</td>
+                        <td class="px-6 py-4">{{facture.datePaiment}}</td>
+                        <td class="px-6 py-4">
+                            <p-button (onClick)="showEditDialog(facture)"  icon="pi pi-pencil" [rounded]="true" [raised]="true"  severity="info" class="mx-3"></p-button>
+                            <p-button (onClick)="deleteFacture(facture.id)"  icon="pi pi-trash" [rounded]="true" [raised]="true"  severity="danger"></p-button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+    </section>
+
+    <!-- facture edit form popup -->
+    <p-dialog header="modifier cette facture" [modal]="true" [(visible)]="visible_edit" [style]="{ width: '30rem' }">
+      <form [formGroup]="fg" (ngSubmit)="edit($event)"  class="w-full p-4 border border-gray-300 bg-white">
+          <div class="grid grid-cols-2 gap-5 text-black">
+
+            <!-- montant -->
+            <div>
+              <label class="block mb-2 text-sm font-medium" for="montant">montant</label>
+              <input type="number" formControlName="montant" id="montant" name="montant" class="block w-full p-2.5 text-sm bg-white border-gray-300 border rounded-lg focus:ring-blue-500 focus:border-blue-500"/>
+            </div>
+
+            <!-- statut -->
+            <div>
+              <label class="block mb-2 text-sm font-medium" for="">statut</label>
+              <select formControlName="statut" name="statut" class="w-full  mb-3 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                  <option value="NON_PAYEE">Non payée</option>
+                  <option value="PAYEE">Payée</option>
+                  <option value="PARTIELLEMENT_PAYEE">Partiellement payée</option>
+                  <option value="ANNULEE">Annulée</option>
+                  <option value="EN_ATTENTE">En attente de paiement</option>
+              </select>
+            </div>
+
+            <!-- date paiment -->
+             @if (fg.get("statut")?.value == "PAYEE") {
+               <div>
+                 <label class="block mb-2 text-sm font-medium" for="datePaiment">date paiment</label>
+                 <input type="date" formControlName="datePaiment" id="datePaiment" name="datePaiment" class="block w-full p-2.5 text-sm bg-white border-gray-300 border rounded-lg focus:ring-blue-500 focus:border-blue-500"/>
+               </div>
+             }
+
+          </div>
+          <button type="submit" class="w-full mt-5 rounded-md bg-blue-600 text-center py-3 text-white">
+            modifier
+          </button>
+        </form>
+    </p-dialog>
+    <!-- end compte edit form popup -->
+
+    <!-- marquer comme paye -->
+
+
+    <p-toast />
+    <p-confirmdialog />
+</main>
+<!-- end main -->

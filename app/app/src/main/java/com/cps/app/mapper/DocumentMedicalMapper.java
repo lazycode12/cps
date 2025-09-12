@@ -1,6 +1,5 @@
 package com.cps.app.mapper;
 
-import com.cps.app.dto.DocumentMedicalDto;
 import com.cps.app.dto.response.DocumentMedicalResponse;
 import com.cps.app.model.DocumentMedical;
 

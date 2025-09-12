@@ -12,10 +12,13 @@ import com.cps.app.dto.ErrorResponse;
 import com.cps.app.dto.response.ConsultationResponse;
 import com.cps.app.dto.response.ConsultationResponseForActivity;
 import com.cps.app.dto.SuccessResponse;
+import com.cps.app.dto.request.AddActivitiesToConsultationRequest;
 import com.cps.app.dto.request.ConsultationRequest;
 import com.cps.app.mapper.ConsultationMapper;
+import com.cps.app.model.Activite;
 import com.cps.app.model.Consultation;
 import com.cps.app.model.Patient;
+import com.cps.app.repo.ActiviteRepository;
 import com.cps.app.repo.ConsultationRepository;
 import com.cps.app.repo.RdvRepository;
 
@@ -27,13 +30,15 @@ public class ConsultationService {
 	private ConsultationRepository consultationRepository;
 	private PatientService patientService;
 	private RdvRepository rdvRepository;
+	private ActiviteRepository activiteRepository;
 	
 	public ConsultationService(ConsultationRepository consultationRepository, PatientService patientService,
-			RdvRepository rdvRepository) {
+			RdvRepository rdvRepository, ActiviteRepository activiteRepository) {
 		super();
 		this.consultationRepository = consultationRepository;
 		this.patientService = patientService;
 		this.rdvRepository = rdvRepository;
+		this.activiteRepository = activiteRepository;
 	}
 	
 	
@@ -94,6 +99,29 @@ public class ConsultationService {
 	        ErrorResponse<ConsultationResponse> errorResponse = new ErrorResponse<>("Échec de la création de Consultation " + e, null);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
+	}
+	
+	public void addActivities(AddActivitiesToConsultationRequest req) throws Exception {
+	    if (req == null) {
+	        throw new IllegalArgumentException("Request cannot be null");
+	    }
+	    
+	    if (req.activiteIds() == null || req.activiteIds().isEmpty()) {
+	        return;
+	    }
+		try {			
+			
+			List<Activite> activities = this.activiteRepository.findAllById(req.activiteIds());
+			Consultation c = getConsultationById(req.consultationId());
+			c.getActivities().addAll(activities);
+			
+			consultationRepository.save(c);
+			
+		}catch (Exception e) {
+			throw new Exception("Failed to add activities", e);
+
+		}
+		
 	}
 		
 	

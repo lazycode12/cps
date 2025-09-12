@@ -1,0 +1,117 @@
+<!-- start side bar -->
+<app-side-bar [isOpen] = "isOpen"></app-side-bar>
+<!-- end sidebar -->
+
+<!-- start min top nav -->
+<app-nav-bar (toggle)="isOpen = !isOpen"></app-nav-bar>
+<!-- end min top nav -->
+
+<!-- start main -->
+<main [ngClass]="{'md:ml-64 md:w-[calc(100%-256px)]': isOpen, 'md:ml-0': !isOpen}" class="bg-gray-100 duration-500 w-full h-lvh pt-16 overflow-y-scroll">
+
+    <!-- start account-creation-form -->
+    <section class="p-4 mt-4">
+        <div class="flex items-center justify-start gap-4 mt-3 mb-8">
+            <i class="pi pi-users text-gray-500 shadow-lg rounded-lg text-3xl p-2 "></i>
+            <h2 class="mb-2 font-bold text-xl text-black">gestion des roles et permissions</h2>
+        </div>
+
+        <div class="rounded-xl bg-white p-4 mt-4 text-black">
+            <h1 class="mb-2 text-xl">choisir un type pour le gestionner</h1>
+            <select [(ngModel)]="table" name="table" class="w-full sm:w-4/12  mb-3 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                <option value="role" name="role">role</option>
+                <option value="permission" name="permission" >permission</option>
+            </select>
+        </div>
+
+        <div class="flex flex-col relative overflow-x-auto mt-4 rounded-lg min-h-96">
+
+            @if(table == "role"){
+                <app-roles-table />
+            }@else if(table == "permission") {
+                <app-permissions-table />
+            }
+
+        </div>
+
+    <div class="container mx-auto p-4">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-xl font-bold">Gestion des autorisations</h1>
+            <button (click)="saveRoles()" [disabled]="isSaving" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400 flex items-center">
+                <span>
+                    @if(!isSaving) {
+                        Enregistrer les modifications
+                    } @else {
+                        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        ...
+                    }
+                </span>
+            </button>
+        </div>
+
+
+        <div class="overflow-x-auto">
+            @if (!rolesLoading && !PermissionsLoading) {
+                <table class="min-w-full bg-white border border-gray-200">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left">Permission</th>
+                        @for (role of roles; track $index) {
+                            <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-center">{{ role.nom }}</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (perm of permissions; track $index) {
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-2 px-4 border-b border-gray-200">
+                                <div class="font-medium">{{ perm.nom }}</div>
+                                <div class="text-sm text-gray-500">{{ perm.description }}</div>
+                            </td>
+                            @for (role of roles; track $index) {
+                                <td class="py-2 px-4 border-b border-gray-200 text-center">
+                                    <input
+                                        type="checkbox"
+                                        [checked]="hasPermission(role.permissions, perm.id)"
+                                        (change)="togglePermission(role, perm)"
+                                        class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
+                                    >
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+                </table>
+            }
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-black">
+                <h2 class="text-lg font-semibold mb-2">Current Permissions:</h2>
+                @if (!rolesLoading) {
+                    <pre class="text-sm bg-white p-2 rounded border border-gray-200">{{ roles | json }}</pre>
+                }
+            </div>
+
+            <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-black">
+                @if (!rolesLoading && !PermissionsLoading) {
+                    <h2 class="text-lg font-semibold mb-2">Modified roles: {{modifiedRoleIds.size}}</h2>
+                    <pre class="text-sm bg-white p-2 rounded border border-gray-200">{{ getModifiedRoles() | json }}</pre>
+                }
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    </section>
+
+
+</main>
+<!-- end main -->
+

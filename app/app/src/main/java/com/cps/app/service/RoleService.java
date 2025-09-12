@@ -6,11 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.cps.app.dto.RoleDto;
 import com.cps.app.dto.ApiResponse;
-import com.cps.app.dto.CreateRoleRequest;
 import com.cps.app.dto.ErrorResponse;
 import com.cps.app.dto.SuccessResponse;
+import com.cps.app.dto.request.CreateRoleRequest;
+import com.cps.app.dto.request.UpdateRolePermissionsRequest;
+import com.cps.app.dto.response.RoleResponse;
 import com.cps.app.mapper.RoleMapper;
 import com.cps.app.model.Permission;
 import com.cps.app.model.Role;
@@ -49,7 +50,7 @@ public class RoleService {
 		return roleRepository.findAllById(ids);
 	}
 	
-	public List<RoleDto> getAllRoles(){
+	public List<RoleResponse> getAllRoles(){
 		return roleRepository
 				.findAll()
 				.stream()
@@ -58,7 +59,7 @@ public class RoleService {
 	}
 
 	
-	public ResponseEntity<ApiResponse<RoleDto>> createRole(CreateRoleRequest request) {
+	public ResponseEntity<ApiResponse<RoleResponse>> createRole(CreateRoleRequest request) {
 		if(roleRepository.existsByNom(request.getNom())) {
 			throw new RuntimeException("Role name already exists");
 		}
@@ -74,41 +75,56 @@ public class RoleService {
 	        }
 	        
 	        Role r = roleRepository.save(role);
-	        RoleDto roleDto = RoleMapper.toDto(r);
-	        SuccessResponse<RoleDto> successResponse = new SuccessResponse<>("le role  a été créée avec succès", roleDto);
+	        RoleResponse roleDto = RoleMapper.toDto(r);
+	        SuccessResponse<RoleResponse> successResponse = new SuccessResponse<>("le role  a été créée avec succès", roleDto);
 	        return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
 	    } catch (Exception e) {
-	        ErrorResponse<RoleDto> errorResponse = new ErrorResponse<>("Échec de la création de role", null);
+	        ErrorResponse<RoleResponse> errorResponse = new ErrorResponse<>("Échec de la création de role", null);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
+	
+	private void updateRolePermission(UpdateRolePermissionsRequest req) {
+		Role r = getRoleById(req.id());
+		r.setPermissions(req.permissions());
+		roleRepository.save(r);
+	}
+	
+	
+	
+	
+	public void updateRolesPermissions(List <UpdateRolePermissionsRequest> rqs){
+		for (UpdateRolePermissionsRequest req : rqs) {
+			updateRolePermission(req);
+		}
+	}
 		
 	
-	public ResponseEntity<ApiResponse<RoleDto>> updateRole(Role body, Long id) {
+	public ResponseEntity<ApiResponse<RoleResponse>> updateRole(Role body, Long id) {
 		try {			
 			Role r = getRoleById(id);
 			r.setNom(body.getNom());
 			r.setDescription(body.getDescription());
 			
 			roleRepository.save(r);
-			RoleDto roleDto = RoleMapper.toDto(r);
-	        SuccessResponse<RoleDto> successResponse = new SuccessResponse<>("le role a été mise à jour avec succès", roleDto);
+			RoleResponse roleDto = RoleMapper.toDto(r);
+	        SuccessResponse<RoleResponse> successResponse = new SuccessResponse<>("le role a été mise à jour avec succès", roleDto);
 	        return ResponseEntity.status(HttpStatus.OK).body(successResponse);
 	    } catch (Exception e) {
-	        ErrorResponse<RoleDto> errorResponse = new ErrorResponse<>("échec de la mise à jour de role"+e, null);
+	        ErrorResponse<RoleResponse> errorResponse = new ErrorResponse<>("échec de la mise à jour de role"+e, null);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
 	
-	public ResponseEntity<ApiResponse<RoleDto>> deleteRole(Long id) {
+	public ResponseEntity<ApiResponse<RoleResponse>> deleteRole(Long id) {
 		try {
 		Role r = getRoleById(id);
-		RoleDto roleDto = RoleMapper.toDto(r);
+		RoleResponse roleDto = RoleMapper.toDto(r);
 		roleRepository.delete(r);
-        SuccessResponse<RoleDto> successResponse = new SuccessResponse<>("le role a été supprimée avec succès", roleDto);
+        SuccessResponse<RoleResponse> successResponse = new SuccessResponse<>("le role a été supprimée avec succès", roleDto);
         return ResponseEntity.status(HttpStatus.OK).body(successResponse);
     } catch (Exception e) {
-        ErrorResponse<RoleDto> errorResponse = new ErrorResponse<>("échec de la suppression de role", null);
+        ErrorResponse<RoleResponse> errorResponse = new ErrorResponse<>("échec de la suppression de role", null);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 	}

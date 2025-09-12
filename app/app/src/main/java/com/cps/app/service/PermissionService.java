@@ -8,11 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cps.app.dto.PermissionDto;
 import com.cps.app.dto.ApiResponse;
 import com.cps.app.dto.ErrorResponse;
 import com.cps.app.dto.SuccessResponse;
 import com.cps.app.dto.request.PermissionRequest;
+import com.cps.app.dto.response.PermissionResponse;
 import com.cps.app.mapper.PermissionMapper;
 import com.cps.app.model.Permission;
 import com.cps.app.model.Role;
@@ -36,7 +36,7 @@ public class PermissionService {
 		return permissionRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Permission not found with id: " + id));
 	}
-	public List<PermissionDto> getAllPermissions(){
+	public List<PermissionResponse> getAllPermissions(){
 		return permissionRepository
 				.findAll()
 				.stream()
@@ -84,31 +84,31 @@ public class PermissionService {
 	}
 		
 	
-	public ResponseEntity<ApiResponse<PermissionDto>> updatePermission(Permission body, Long id) {
+	public ResponseEntity<ApiResponse<PermissionResponse>> updatePermission(Permission body, Long id) {
 		try {			
 			Permission p = getPermissionById(id);
 			p.setNom(body.getNom());
 			p.setDescription(body.getDescription());
 			
 			permissionRepository.save(p);
-			PermissionDto permissionDto = PermissionMapper.toDto(p);
-	        SuccessResponse<PermissionDto> successResponse = new SuccessResponse<>("permission a été mise à jour avec succès", permissionDto);
+			PermissionResponse permissionDto = PermissionMapper.toDto(p);
+	        SuccessResponse<PermissionResponse> successResponse = new SuccessResponse<>("permission a été mise à jour avec succès", permissionDto);
 	        return ResponseEntity.status(HttpStatus.OK).body(successResponse);
 	    } catch (Exception e) {
-	        ErrorResponse<PermissionDto> errorResponse = new ErrorResponse<>("échec de la mise à jour de permission", null);
+	        ErrorResponse<PermissionResponse> errorResponse = new ErrorResponse<>("échec de la mise à jour de permission", null);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
 	
-	public ResponseEntity<ApiResponse<PermissionDto>> deletePermission(Long id) {
+	public ResponseEntity<ApiResponse<PermissionResponse>> deletePermission(Long id) {
 		try {
 		Permission a = getPermissionById(id);
-		PermissionDto permissionDto = PermissionMapper.toDto(a);
+		PermissionResponse permissionDto = PermissionMapper.toDto(a);
 		permissionRepository.delete(a);
-        SuccessResponse<PermissionDto> successResponse = new SuccessResponse<>("permission a été supprimée avec succès", permissionDto);
+        SuccessResponse<PermissionResponse> successResponse = new SuccessResponse<>("permission a été supprimée avec succès", permissionDto);
         return ResponseEntity.status(HttpStatus.OK).body(successResponse);
     } catch (Exception e) {
-        ErrorResponse<PermissionDto> errorResponse = new ErrorResponse<>("échec de la suppression de permission", null);
+        ErrorResponse<PermissionResponse> errorResponse = new ErrorResponse<>("échec de la suppression de permission", null);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 	}

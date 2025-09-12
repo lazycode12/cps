@@ -2,21 +2,11 @@ package com.cps.app.service;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.cps.app.dto.ApiResponse;
-import com.cps.app.dto.ErrorResponse;
-import com.cps.app.dto.SuccessResponse;
-import com.cps.app.dto.request.ActiviteRequest;
 import com.cps.app.dto.request.MedicamentRequest;
-import com.cps.app.dto.response.ActiviteResponse;
 import com.cps.app.dto.response.MedicamentResponse;
-import com.cps.app.mapper.ActivityMapper;
 import com.cps.app.mapper.MedicamentMapper;
-import com.cps.app.model.Activite;
-import com.cps.app.model.Consultation;
 import com.cps.app.model.Medicament;
 import com.cps.app.repo.MedicamentRepository;
 

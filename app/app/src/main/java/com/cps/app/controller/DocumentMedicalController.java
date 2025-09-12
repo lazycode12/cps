@@ -7,13 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,13 +20,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cps.app.dto.ApiResponse;
 import com.cps.app.dto.request.DocumentMedicalRequest;
 import com.cps.app.dto.response.DocumentMedicalResponse;
-import com.cps.app.enums.TypeDocumentMedical;
 import com.cps.app.mapper.DocumentMedicalMapper;
 import com.cps.app.model.DocumentMedical;
 import com.cps.app.service.DocumentMedicalService;
 
 @RestController
 @RequestMapping("/documents-medicales")
+//@PreAuthorize("hasAuthority('gestion-factures')")
 public class DocumentMedicalController {
 	@Autowired
 	private DocumentMedicalService documentMedicalService;
@@ -55,10 +54,6 @@ public class DocumentMedicalController {
     	return documentMedicalService.uploadMedicalDocument(file, req);	
     }
     
-//    @PutMapping("/{id}")
-//    public ResponseEntity<ApiResponse<DocumentMedicalResponse>> updateDocumentMedical(DocumentMedical role, @PathVariable Long id){
-//    	return documentMedicalService.updateDocumentMedical(role, id);
-//    }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<DocumentMedicalResponse>> deleteDocumentMedical(@PathVariable Long id){

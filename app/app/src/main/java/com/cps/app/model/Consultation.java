@@ -54,6 +54,15 @@ public class Consultation {
 		this.dateFin = dateFin;
 	}
 
+	
+	public List<Activite> getActivities() {
+		return activities;
+	}
+
+	public void setActivities(List<Activite> activities) {
+		this.activities = activities;
+	}
+
 	public Long getId() {
 		return id;
 	}

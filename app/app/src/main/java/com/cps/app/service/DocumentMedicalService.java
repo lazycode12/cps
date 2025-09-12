@@ -14,13 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.cps.app.dto.DocumentMedicalDto;
 import com.cps.app.dto.ApiResponse;
 import com.cps.app.dto.ErrorResponse;
 import com.cps.app.dto.SuccessResponse;
 import com.cps.app.dto.request.DocumentMedicalRequest;
 import com.cps.app.dto.response.DocumentMedicalResponse;
-import com.cps.app.enums.TypeDocumentMedical;
 import com.cps.app.mapper.DocumentMedicalMapper;
 import com.cps.app.model.DocumentMedical;
 import com.cps.app.model.Patient;
