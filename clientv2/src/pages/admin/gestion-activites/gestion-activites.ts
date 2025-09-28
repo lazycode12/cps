@@ -49,6 +49,7 @@ export class GestionActivites {
     type : new FormControl(""),
     statut : new FormControl(""),
     date : new FormControl(""),
+    prix : new FormControl(0),
     consultationId : new FormControl(0)
   })
 

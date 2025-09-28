@@ -33,6 +33,10 @@ public class Consultation {
 	@JoinColumn(name="patient_id")
 	private Patient patient;
 	
+	@ManyToOne
+	@JoinColumn(name="type")
+	private TypeConsultation type;
+	
 	@OneToOne
 	@JoinColumn(name="rdv_id", nullable = true)
 	private Rdv rdv;
@@ -111,7 +115,14 @@ public class Consultation {
 	public void setDateFin(LocalDate dateFin) {
 		this.dateFin = dateFin;
 	}
-	
+
+	public TypeConsultation getType() {
+		return type;
+	}
+
+	public void setType(TypeConsultation type) {
+		this.type = type;
+	}
 	
 	
 }

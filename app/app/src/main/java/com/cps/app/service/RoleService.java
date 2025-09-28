@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 import com.cps.app.dto.ApiResponse;
 import com.cps.app.dto.ErrorResponse;
 import com.cps.app.dto.SuccessResponse;
-import com.cps.app.dto.request.CreateRoleRequest;
-import com.cps.app.dto.request.UpdateRolePermissionsRequest;
+import com.cps.app.dto.request.RoleRequest;
 import com.cps.app.dto.response.RoleResponse;
 import com.cps.app.mapper.RoleMapper;
 import com.cps.app.model.Permission;
@@ -59,18 +58,18 @@ public class RoleService {
 	}
 
 	
-	public ResponseEntity<ApiResponse<RoleResponse>> createRole(CreateRoleRequest request) {
-		if(roleRepository.existsByNom(request.getNom())) {
+	public ResponseEntity<ApiResponse<RoleResponse>> createRole(RoleRequest req) {
+		if(roleRepository.existsByNom(req.nom())) {
 			throw new RuntimeException("Role name already exists");
 		}
 	    try {	    	
 	    	// Create new role
 	    	Role role = new Role();
-	    	role.setNom(request.getNom());
-	    	role.setDescription(request.getDescription());
+	    	role.setNom(req.nom());
+	    	role.setDescription(req.description());
 	    	
-	        if (request.getPermissionIds() != null && !request.getPermissionIds().isEmpty()) {
-	            List<Permission> permissions = permissionRepository.findAllById(request.getPermissionIds());
+	        if (req.permissions() != null && !req.permissions().isEmpty()) {
+	            List<Permission> permissions = permissionRepository.findAllById(req.permissions());
 	            role.setPermissions(permissions);
 	        }
 	        
@@ -84,27 +83,16 @@ public class RoleService {
 	    }
 	}
 	
-	private void updateRolePermission(UpdateRolePermissionsRequest req) {
-		Role r = getRoleById(req.id());
-		r.setPermissions(req.permissions());
-		roleRepository.save(r);
-	}
-	
-	
-	
-	
-	public void updateRolesPermissions(List <UpdateRolePermissionsRequest> rqs){
-		for (UpdateRolePermissionsRequest req : rqs) {
-			updateRolePermission(req);
-		}
-	}
 		
 	
-	public ResponseEntity<ApiResponse<RoleResponse>> updateRole(Role body, Long id) {
+	public ResponseEntity<ApiResponse<RoleResponse>> updateRole(RoleRequest req, Long id) {
 		try {			
 			Role r = getRoleById(id);
-			r.setNom(body.getNom());
-			r.setDescription(body.getDescription());
+			List<Permission> permissions = permissionRepository.findAllById(req.permissions());
+			
+			r.setNom(req.nom());
+			r.setDescription(req.description());
+			r.setPermissions(permissions);
 			
 			roleRepository.save(r);
 			RoleResponse roleDto = RoleMapper.toDto(r);

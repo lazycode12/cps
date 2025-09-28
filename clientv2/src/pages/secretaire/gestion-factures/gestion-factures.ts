@@ -21,7 +21,6 @@ import { Facture } from '../../../interfaces/interfaces';
   templateUrl: './gestion-factures.html'
 })
 export class GestionFactures {
-  sidebarItems: any = [];
   isOpen: boolean = true;
   visible_create: boolean = false;
   visible_edit: boolean = false;
@@ -72,6 +71,15 @@ export class GestionFactures {
 
   create() {
 
+  }
+
+  generate(consultationId:number){
+    this.httpService.generateFacture(consultationId).subscribe({
+      next: (pdfBlob) => {
+      const fileURL = URL.createObjectURL(pdfBlob);
+      window.open(fileURL);
+    }
+    })
   }
 
   edit(e:Event) {

@@ -112,9 +112,13 @@ export class HttpService {
       );
   }
 
-  // ****************************** ordonance ******************************
+  // ****************************** generate ******************************
   generateOrdonance(data: any){
-    return this.http.post(`${this.baseUrl}ordonance/generate`, data, {responseType: 'blob'})
+    return this.http.post(`${this.baseUrl}generate/ordonance`, data, {headers:{"Authorization": `Bearer ${this.token}`}, responseType: 'blob'})
+  }
+
+  generateFacture(consultatino_id: any){
+    return this.http.post(`${this.baseUrl}generate/facture/${consultatino_id}`,{}, {headers:{"Authorization": `Bearer ${this.token}`}, responseType: 'blob'})
   }
 
 
@@ -186,6 +190,27 @@ export class HttpService {
 
   deleteActivity(id:number): Observable<any>{
     return this.delete(`activites/${id}`)
+  }
+
+
+  // ****************************** activities ******************************
+  createProduit(data:any){
+    return this.post<any>("produits", data)
+  }
+  getAllProduits(): Observable<any>{
+    return this.get<any>(`produits`)
+  }
+
+  getProduit(id:number): Observable<any>{
+    return this.get<any>(`produits/${id}`)
+  }
+
+  updateProduit(data:any, id:number): Observable<any>{
+    return this.put(`produits/${id}`, data)
+  }
+
+  deleteProduit(id:number): Observable<any>{
+    return this.delete(`produits/${id}`)
   }
 
 
@@ -312,6 +337,29 @@ export class HttpService {
   deleteRdv(id:number): Observable<any>{
     return this.delete(`rdvs/${id}`)
   }
+
+
+  // ****************************** TypeConsultation ******************************
+
+  createTypeConsultation(data:any){
+    return this.post<any>("type-consultations", data)
+  }
+  getAllTypeConsultations(): Observable<any>{
+    return this.get<any>("type-consultations")
+  }
+
+  getTypeConsultation(id:number): Observable<any>{
+    return this.get<any>(`type-consultations/${id}`)
+  }
+
+  updateTypeConsultation(data:any, id:number): Observable<any>{
+    return this.put(`type-consultations/${id}`, data)
+  }
+
+  deleteTypeConsultation(id:number): Observable<any>{
+    return this.delete(`type-consultations/${id}`)
+  }
+
 
 
   // ****************************** medicaments ******************************

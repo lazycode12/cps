@@ -39,6 +39,7 @@
                         <td class="px-6 py-4">
                             <p-button (onClick)="showEditDialog(facture)"  icon="pi pi-pencil" [rounded]="true" [raised]="true"  severity="info" class="mx-3"></p-button>
                             <p-button (onClick)="deleteFacture(facture.id)"  icon="pi pi-trash" [rounded]="true" [raised]="true"  severity="danger"></p-button>
+                            <p-button (onClick)="generate(facture.consultation.id)"  icon="pi pi-file-export" [rounded]="true" [raised]="true"  severity="danger"></p-button>
                         </td>
                     </tr>
                 </ng-template>

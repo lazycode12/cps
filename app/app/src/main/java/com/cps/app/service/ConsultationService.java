@@ -18,6 +18,7 @@ import com.cps.app.mapper.ConsultationMapper;
 import com.cps.app.model.Activite;
 import com.cps.app.model.Consultation;
 import com.cps.app.model.Patient;
+import com.cps.app.model.TypeConsultation;
 import com.cps.app.repo.ActiviteRepository;
 import com.cps.app.repo.ConsultationRepository;
 import com.cps.app.repo.RdvRepository;
@@ -31,14 +32,16 @@ public class ConsultationService {
 	private PatientService patientService;
 	private RdvRepository rdvRepository;
 	private ActiviteRepository activiteRepository;
+	private TypeConsultationService typeConsultationService;
 	
 	public ConsultationService(ConsultationRepository consultationRepository, PatientService patientService,
-			RdvRepository rdvRepository, ActiviteRepository activiteRepository) {
+			RdvRepository rdvRepository, ActiviteRepository activiteRepository, TypeConsultationService typeConsultationService) {
 		super();
 		this.consultationRepository = consultationRepository;
 		this.patientService = patientService;
 		this.rdvRepository = rdvRepository;
 		this.activiteRepository = activiteRepository;
+		this.typeConsultationService = typeConsultationService;
 	}
 	
 	
@@ -48,11 +51,6 @@ public class ConsultationService {
 	public ConsultationRepository getConsultationRepository() {
 		return consultationRepository;
 	}
-
-
-
-
-
 
 
 	public Consultation getConsultationById(Long id) {
@@ -83,10 +81,12 @@ public class ConsultationService {
 	    	
 	        Consultation c = new Consultation();
 	        Patient p = patientService.getPatientById(req.patientId());
+	        TypeConsultation tc = typeConsultationService.findById(req.typeId());
 	        
 	        c.setDateDebut(LocalDate.now());
 	        c.setDateFin(req.dateFin());
 	        c.setPatient(p);
+	        c.setType(tc);
 	        
 	        consultationRepository.save(c);
 	        

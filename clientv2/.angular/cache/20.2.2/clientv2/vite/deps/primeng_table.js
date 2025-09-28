@@ -2,13 +2,15 @@ import {
   BaseInput,
   Select,
   SelectModule
-} from "./chunk-JKGA4BBT.js";
+} from "./chunk-6DEVHBEO.js";
 import {
-  Badge,
-  BadgeModule,
   Button,
   ButtonModule
-} from "./chunk-O2NF5FII.js";
+} from "./chunk-7RK6SFVH.js";
+import {
+  Badge,
+  BadgeModule
+} from "./chunk-OJALWFM6.js";
 import {
   Checkbox,
   CheckboxModule
@@ -18,6 +20,10 @@ import {
   InputText,
   InputTextModule
 } from "./chunk-NCP3AHZU.js";
+import {
+  Scroller,
+  ScrollerModule
+} from "./chunk-C5RNXXCE.js";
 import {
   ObjectUtils,
   UniqueComponentId,
@@ -38,10 +44,6 @@ import {
   blockBodyScroll,
   unblockBodyScroll
 } from "./chunk-RENVHT2H.js";
-import {
-  Scroller,
-  ScrollerModule
-} from "./chunk-C5RNXXCE.js";
 import {
   AngleDoubleLeftIcon,
   AngleDoubleRightIcon,

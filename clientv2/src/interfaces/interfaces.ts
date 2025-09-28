@@ -15,13 +15,13 @@ export interface Activite{
     id: number,
 	type: string,
 	statut: string,
-	date: string
+	date: string,
+    prix: number
 }
 
 export interface Facture{
     id: number,
     montant: number,
-    statut: string,
     datePaiment: string,
     consultation: ConsultationSummary
 
@@ -82,5 +82,13 @@ export interface Medicament{
     nom: string,
     qte: number,
     description: string
+}
 
+export interface Produit {
+  id: number;
+  nom: string;
+  quantite: number;
+  seuilReapprovisionnement: number;
+  unite: string;
+  categorie: string;
 }

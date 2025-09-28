@@ -24,7 +24,8 @@ export class SideBar {
   'gestion-consultations',
   'gestion-rdvs',
   'gestion-factures',
-  'consulter-statistiques'
+  'consulter-statistiques',
+  'gestion-produits'
 ];
 
   httpService : HttpService = inject(HttpService);

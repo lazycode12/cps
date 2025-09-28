@@ -35,6 +35,8 @@ public class Activite {
 	@Column(name = "date", nullable = false, length = 50)
 	private LocalDate date;
 	
+	private double prix;
+	
 	@ManyToOne
 	@JoinColumn(name="consultation_id")
 	private Consultation consultation;
@@ -58,6 +60,13 @@ public class Activite {
 		this.id = id;
 	}
 	
+	public double getPrix() {
+		return prix;
+	}
+
+	public void setPrix(double prix) {
+		this.prix = prix;
+	}
 
 	public Consultation getConsultation() {
 		return consultation;

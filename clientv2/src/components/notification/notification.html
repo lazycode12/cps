@@ -1,0 +1,47 @@
+@if (showNotificationPanel) {
+  <div class="absolute right-0 top-12 w-[400px] bg-white border border-gray-300 rounded-md shadow-lg z-50">
+    <!-- Header -->
+    <div class="flex justify-between items-center p-4 border-b border-gray-200">
+      <h3 class="text-lg font-semibold">Notifications ({{ unreadCount }})</h3>
+      <button pButton icon="pi pi-times" class="p-button-text" (click)="toggleNotifications()"></button>
+    </div>
+
+    <!-- Notification List -->
+    <div class="max-h-[400px] overflow-y-auto">
+      @for (notification of notifications; track $index) {
+          <div
+               class="flex justify-between items-center p-4 border-b border-gray-100"
+               [class.bg-gray-50]="!notification.read"
+               [class.border-l-4]="notification.type === 'warning'"
+               [class.border-yellow-400]="notification.type === 'warning'">
+
+            <div class="flex items-start gap-2 flex-1">
+              <i [class]="getNotificationIcon(notification.type)"></i>
+              <div>
+                <p class="text-sm">{{ notification.message }}</p>
+                <small class="text-xs text-gray-500">{{ notification.timestamp | date:'short' }}</small>
+              </div>
+            </div>
+
+            @if (!notification.read) {
+                <button
+                      pButton icon="pi pi-check"
+                      class="p-button-text p-button-sm"
+                      (click)="markAsRead(notification.id)">
+                </button>
+            }
+          </div>
+      }
+    </div>
+
+    <!-- Footer -->
+    <div class="flex justify-between p-4 border-t border-gray-200">
+      <button pButton label="Tout marquer comme lu"
+              class="p-button-text"
+              (click)="markAllAsRead()"></button>
+      <button pButton label="Effacer tout"
+              class="p-button-text p-button-danger"
+              (click)="clearAll()"></button>
+    </div>
+  </div>
+}

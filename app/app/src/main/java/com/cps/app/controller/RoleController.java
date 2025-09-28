@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cps.app.dto.SuccessResponse;
-import com.cps.app.dto.request.CreateRoleRequest;
-import com.cps.app.dto.request.UpdateRolePermissionsRequest;
+import com.cps.app.dto.request.RoleRequest;
 import com.cps.app.dto.response.RoleResponse;
 import com.cps.app.dto.ApiResponse;
 import com.cps.app.dto.ErrorResponse;
@@ -44,27 +43,14 @@ public class RoleController {
     }
     
     @PostMapping("")
-    public ResponseEntity<ApiResponse<RoleResponse>> createRole(@RequestBody CreateRoleRequest role){
+    public ResponseEntity<ApiResponse<RoleResponse>> createRole(@RequestBody RoleRequest role){
     	return roleService.createRole(role);
     	
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<RoleResponse>> updateRole(@RequestBody Role role, @PathVariable Long id){
-    	return roleService.updateRole(role, id);
-    	
-    }
-    
-    @PutMapping("updatepermissions")
-    public ResponseEntity<ApiResponse<Void>> updateRolesPermissions(@RequestBody List <UpdateRolePermissionsRequest> rqs){
-    	try {
-    		roleService.updateRolesPermissions(rqs);
-	        SuccessResponse<Void> successResponse = new SuccessResponse<>("les permissions des roles  a été modifiers avec succès", null);
-	        return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
-    	}catch (Exception e) {
-	        ErrorResponse<Void> errorResponse = new ErrorResponse<>("Échec de la mise a jours des permissions", null);
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-	    }
+    public ResponseEntity<ApiResponse<RoleResponse>> updateRole(@RequestBody RoleRequest req, @PathVariable Long id){
+    	return roleService.updateRole(req, id);
     	
     }
     

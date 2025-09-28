@@ -44,6 +44,31 @@
               <textarea formControlName="description" name="description" class="block w-full p-2.5 text-sm bg-white border-gray-300 border rounded-lg focus:ring-blue-500 focus:border-blue-500" ></textarea>
             </div>
 
+            <!-- Permissions Section -->
+            <div class="mt-6 col-span-2">
+              <label class="block mb-3 text-sm font-medium">Permissions:</label>
+              <div class="grid grid-cols-2 gap-3 max-h-60 overflow-y-auto p-2 border border-gray-200 rounded-lg">
+                @if (permissions) {
+                  @for (permission of permissions; track $index) {
+
+                    <div class="flex items-start">
+                      <input
+                        #checkboxInput
+                        type="checkbox"
+                        [id]="'perm_' + permission.id"
+                        [checked]="isPermissionSelected(permission.id)"
+                        (change)="onPermissionChange(permission.id, checkboxInput.checked)"
+                        class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      >
+                      <label [for]="'perm_' + permission.id" class="ml-2 text-sm cursor-pointer">
+                        <span class="font-medium">{{ permission.nom }}</span>
+                      </label>
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+
           </div>
           <button type="submit" class="w-full mt-5 rounded-md bg-blue-600 text-center py-3 text-white">
             créer
@@ -67,6 +92,31 @@
             <div>
               <label class="block mb-2 text-sm font-medium" for="">description</label>
               <textarea formControlName="description" name="description" class="block w-full p-2.5 text-sm bg-white border-gray-300 border rounded-lg focus:ring-blue-500 focus:border-blue-500" ></textarea>
+            </div>
+
+            <!-- Permissions Section -->
+            <div class="mt-6 col-span-2">
+              <label class="block mb-3 text-sm font-medium">Permissions:</label>
+              <div class="grid grid-cols-2 gap-3 max-h-60 overflow-y-auto p-2 border border-gray-200 rounded-lg">
+                @if (permissions) {
+                  @for (permission of permissions; track $index) {
+
+                    <div class="flex items-start">
+                      <input
+                        #checkboxInput
+                        type="checkbox"
+                        [id]="'perm_' + permission.id"
+                        [checked]="isPermissionSelected(permission.id)"
+                        (change)="onPermissionChange(permission.id, checkboxInput.checked)"
+                        class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      >
+                      <label [for]="'perm_' + permission.id" class="ml-2 text-sm cursor-pointer">
+                        <span class="font-medium">{{ permission.nom }}</span>
+                      </label>
+                    </div>
+                  }
+                }
+              </div>
             </div>
 
           </div>

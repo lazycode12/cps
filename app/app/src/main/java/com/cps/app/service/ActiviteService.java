@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cps.app.dto.ApiResponse;
 import com.cps.app.dto.ErrorResponse;
@@ -24,12 +26,16 @@ public class ActiviteService {
 	private ActiviteRepository activiteRepository;
 	private ConsultationService consultationService;
 	
+	private static final Logger logger = LoggerFactory.getLogger(ActiviteService.class);
+	
 	public ActiviteService(ActiviteRepository activiteRepository, ConsultationService consultationService) {
 		super();
 		this.activiteRepository = activiteRepository;
 		this.consultationService = consultationService;
+		logger.info("ActiviteService initialized");
 	}
 	public Activite getActiviteById(Long id) {
+		 logger.debug("Searching for activity with ID: {}", id);
 		return activiteRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Activite not found with id: " + id));
 	}
@@ -50,6 +56,7 @@ public class ActiviteService {
 	    	
 	    	a.setType(activite.type());
 	    	a.setStatut(activite.statut());
+	    	a.setPrix(activite.prix());
 	    	a.setDate(activite.date());
 	    	a.setConsultation(c);
 	    	

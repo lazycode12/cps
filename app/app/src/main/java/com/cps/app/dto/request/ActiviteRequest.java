@@ -9,5 +9,6 @@ public record ActiviteRequest(
 		TypeActivite type,
 		StatutActivite statut,
 		LocalDate date,
+		double prix,
 		Long consultationId
 		) {}

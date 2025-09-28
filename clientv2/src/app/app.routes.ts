@@ -10,6 +10,9 @@ import { PatientProfile } from '../pages/patient-profile/patient-profile';
 import { GestionMedicaments } from '../pages/admin/gestion-medicaments/gestion-medicaments';
 import { Login } from '../pages/login/login';
 import { Statistics } from '../pages/statistics/statistics';
+import { CreateRdv } from '../pages/secretaire/create-rdv/create-rdv';
+import { TypeConsultation } from '../pages/secretaire/type-consultation/type-consultation';
+import { GestionProduits } from '../pages/admin/gestion-produits/gestion-produits';
 
 export const routes: Routes = [
     {path: 'gestion-utilisateurs', component: GestionUtlisateur},
@@ -19,8 +22,11 @@ export const routes: Routes = [
 
     {path: 'gestion-patients', component: GestionPatients},
     {path: 'gestion-consultations', component: GestionConsultation},
+    {path: 'type-consultations', component: TypeConsultation},
     {path: 'gestion-rdvs', component: GestionRdvs},
+    {path: 'create-rdvs', component: CreateRdv},
     {path: 'gestion-factures', component: GestionFactures},
+    {path: 'gestion-produits', component: GestionProduits},
 
     {path: 'patient-profile/:id', component: PatientProfile},
 

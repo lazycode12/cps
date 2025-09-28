@@ -11,6 +11,7 @@ public class ActivityMapper {
 				a.getType().getLabel(),
 				a.getStatut().getLabel(),
 				a.getDate(),
+				a.getPrix(),
 				a.getConsultation().getPatient() != null ?  a.getConsultation().getPatient().getNom() + " " + a.getConsultation().getPatient().getPrenom() : null
 				);
 	}

@@ -9,6 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { HttpService } from '../../../services/http-service';
 import { HttpOperationNotificationService } from '../../../services/http-operation-notification-service';
+import { Permission, Role } from '../../../interfaces/interfaces';
 
 @Component({
   selector: 'app-roles-table',
@@ -20,12 +21,14 @@ export class RolesTable {
 
   visible_edit: boolean = false;
   visible_create: boolean = false;
-  roles: any[] = [];
+  roles!: Role[]
+  permissions! : Permission[]
   selectedRoleId!: number;
 
   fg = new FormGroup({
     nom: new FormControl(""),
-    description: new FormControl("")
+    description: new FormControl(""),
+    permissions: new FormControl<number[]>([])
   });
 
   // services
@@ -42,16 +45,33 @@ export class RolesTable {
     })
   }
 
-  showEditDialog(role: any) {
-    this.fg.patchValue(role)
+  getPermissions() {
+    return this.httpService.getAllPermissions().subscribe({
+      next: r =>  {
+        this.permissions = r;}
+    })
+  }
+
+  showEditDialog(role: Role) {
+    this.fg.patchValue({
+      nom: role.nom,
+      description: role.description,
+      permissions: role.permissions.map(p => p.id)
+    });
+
     this.selectedRoleId = role.id;
     this.visible_edit = true;
+    this.getPermissions();
   }
 
   showCreateDialog() {
+    this.getPermissions()
     this.visible_create = true;
     this.fg.reset();
+    this.fg.patchValue({ permissions: [] });
   }
+
+
 
   create(){
     // Logic to create a new role
@@ -97,4 +117,30 @@ export class RolesTable {
     })
     this.visible_edit = false;
   }
+
+  onPermissionChange(permissionId: number, isChecked: boolean) {
+    const currentPermissions = this.fg.get('permissions')?.value || [];
+
+    if (isChecked) {
+      // Add permission if checked
+      currentPermissions.push(permissionId);
+    } else {
+      // Remove permission if unchecked
+      const index = currentPermissions.indexOf(permissionId);
+      if (index > -1) {
+        currentPermissions.splice(index, 1);
+      }
+
+    }
+    this.fg.patchValue({
+      permissions: currentPermissions
+    });
+  }
+
+  // Check if a permission is selected
+  isPermissionSelected(permissionId: number): boolean {
+    const currentPermissions = this.fg.get('permissions')?.value || [];
+    return currentPermissions.includes(permissionId);
+  }
+
 }

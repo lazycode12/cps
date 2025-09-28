@@ -1,3 +1,20 @@
-<nav class="py-4 px-8 fixed w-full flex justify-start items-center gap-4 bg-white h-[64px] z-50 shadow-sm">
+<!-- <nav class="py-4 px-8 fixed w-full flex justify-start items-center gap-4 bg-white h-[64px] z-50 shadow-sm">
+    <p-overlaybadge value="2">
+        <i (click)="showNotifications()" class="pi pi-bell" style="font-size: 2rem"></i>
+    </p-overlaybadge>
     <i (click)="toggleSideBar()" class="pi pi-bars font-medium text-xl mr-4 cursor-pointer text-black"></i>
+</nav> -->
+
+<nav class="py-4 px-8 fixed w-full flex justify-between items-center gap-4 bg-white h-[64px] z-50 shadow-sm">
+    <i (click)="toggleSideBar()" class="pi pi-bars font-medium text-2xl mr-4 cursor-pointer text-black"></i>
+    <div class="relative">
+        <p-overlayBadge [value]="unreadCount" [severity]="unreadCount > 0 ? 'danger' : 'info'">
+            <i (click)="toggleNotifications()" class="pi pi-bell cursor-pointer text-2xl"></i>
+        </p-overlayBadge>
+    </div>
 </nav>
+
+<app-notification></app-notification>
+<!-- @if (showNotificationsPanel) { -->
+
+

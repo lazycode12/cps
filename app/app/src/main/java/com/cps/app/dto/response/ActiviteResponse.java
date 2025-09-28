@@ -7,5 +7,6 @@ public record ActiviteResponse(
 		String type,
 		String statut,
 		LocalDate date,
+		double prix,
 		String patient
 		) {}

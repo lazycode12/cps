@@ -1,6 +1,6 @@
 import { Activite, Facture, Medicament, Rdv } from './../../../interfaces/interfaces';
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SideBar } from '../../../components/side-bar/side-bar';
 import { NavBar } from '../../../components/nav-bar/nav-bar';
 import { NgClass } from '@angular/common';
@@ -23,7 +23,6 @@ import { Consultation, Patient } from '../../../interfaces/interfaces';
   templateUrl: './gestion-consultation.html'
 })
 export class GestionConsultation {
-  sidebarItems: any = [];
   isOpen: boolean = true;
   visible_create: boolean = false;
   visible_rdv_create: boolean = false;
@@ -45,24 +44,74 @@ export class GestionConsultation {
   selectedMedicamentIds: any;
   patients!: Patient[];
   activities!: Activite[]
+  types:any;
   consultationsLoading: boolean = true;
   patientsLoading: boolean = true;
+  ordonnanceForm!: FormGroup;
 
+// services
+httpService: HttpService = inject(HttpService);
+confirmationService: ConfirmationService = inject(ConfirmationService);
 
-  // services
-  httpService : HttpService = inject(HttpService);
-  confirmationService: ConfirmationService = inject(ConfirmationService);
+constructor(private fb: FormBuilder) {
+  this.ordonnanceForm = this.fb.group({
+    consultationId: [0],
+    req: this.fb.array([]) // ← Nom correct
+  });
+}
+
+get medicamentsArray(): FormArray {
+  return this.ordonnanceForm.get('req') as FormArray;
+}
+
+nouveauMedicament(): FormGroup {
+  return this.fb.group({
+    nom: ['', Validators.required],
+    dosage: ['', Validators.required],
+    forme: ['', Validators.required],
+    posologie: ['', Validators.required],
+    duree: ['', [Validators.required]] // ← Correction : "duree" au lieu de "duree"
+  });
+}
+
+ajouterMedicament(): void {
+  this.medicamentsArray.push(this.nouveauMedicament());
+}
+
+supprimerMedicament(index: number): void {
+  this.medicamentsArray.removeAt(index);
+}
+
+generateOrdonance() {
+  if (this.ordonnanceForm.valid) {
+    this.ordonnanceForm.get('consultationId')?.setValue(this.selectedConsultationId)
+    const ordonnance = this.ordonnanceForm.value; // ← Correction ici aussi
+    console.log('Ordonnance enregistrée:', ordonnance);
+
+    this.httpService.generateOrdonance(ordonnance).subscribe({
+      next: (pdfBlob) => {
+      const fileURL = URL.createObjectURL(pdfBlob);
+      window.open(fileURL); // 👈 open in browser
+    }
+    })
+  } else {
+    console.log('Formulaire invalide');
+  }
+}
+
 
   //ngOnInit function
   ngOnInit(){
     this.getAllConsultations()
     this.getMedicaments()
+    this.getTypes()
   }
 
   fg = new FormGroup({
     dateDebut : new FormControl(""),
     dateFin : new FormControl(""),
     patientId : new FormControl(0),
+    typeId: new FormControl<number>(0)
   })
 
   rdv_fg = new FormGroup({
@@ -73,8 +122,6 @@ export class GestionConsultation {
   })
 
   facture_fg = new FormGroup({
-    montant : new FormControl(0.0),
-    statut : new FormControl(""),
     datePaiment : new FormControl(""),
     consultationId : new FormControl(0),
   })
@@ -146,6 +193,15 @@ export class GestionConsultation {
     })
   }
 
+  getTypes(): void{
+    this.httpService.getAllTypeConsultations().subscribe({
+      next: r => {
+        this.types = r;
+      },
+      error : () => {}
+    })
+  }
+
   getPatients(): void{
     this.httpService.getAllPatients().subscribe({
       next: r => {
@@ -197,16 +253,8 @@ export class GestionConsultation {
   createFacture() {
     this.facture_fg.get("consultationId")?.setValue(this.selectedConsultationIdForFacture)
     let data = {}
-    if(this.facture_fg.get("statut")?.value == "PAYEE"){
-      data = this.facture_fg.value
-    }else{
-      data = {
-        montant : this.facture_fg.get("montant")?.value,
-        statut : this.facture_fg.get("statut")?.value,
-        consultationId: this.facture_fg.get("consultationId")?.value,
-      }
-    }
-    this.httpService.createFacture(data).subscribe({
+
+    this.httpService.createFacture(this.facture_fg.value).subscribe({
       next: () => {
         this.getAllConsultations();
         this.visible_facture_create = false;
@@ -262,15 +310,5 @@ export class GestionConsultation {
     })
   }
 
-  generateOrdonance(){
-    this.ordonance_fg.get("consultationId")?.setValue(this.selectedConsultationId);
-    this.ordonance_fg.get("medicamentsIds")?.setValue(this.selectedMedicamentIds);
 
-    this.httpService.generateOrdonance(this.ordonance_fg.value).subscribe({
-      next: (pdfBlob) => {
-      const fileURL = URL.createObjectURL(pdfBlob);
-      window.open(fileURL); // 👈 open in browser
-    }
-    })
-  }
 }

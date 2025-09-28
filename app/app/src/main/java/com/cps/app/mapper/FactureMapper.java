@@ -9,7 +9,6 @@ public class FactureMapper {
 		return new FactureResponse(
 				f.getId(),
 				f.getMontant(),
-				f.getStatut(),
 				f.getDatePaiment(),
 				ConsultationMapper.toConsultationSummary(f.getConsultation())
 				);

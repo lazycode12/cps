@@ -5,5 +5,6 @@ import java.time.LocalDate;
 public record ConsultationRequest(
 	    LocalDate dateDebut,
 	    LocalDate dateFin,
-	    Long patientId
+	    Long patientId,
+	    Long typeId
 	    ) {}

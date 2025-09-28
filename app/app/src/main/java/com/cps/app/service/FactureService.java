@@ -12,8 +12,8 @@ import com.cps.app.dto.ErrorResponse;
 import com.cps.app.dto.SuccessResponse;
 import com.cps.app.dto.request.FactureRequest;
 import com.cps.app.dto.response.FactureResponse;
-import com.cps.app.enums.FactureStatut;
 import com.cps.app.mapper.FactureMapper;
+import com.cps.app.model.Activite;
 import com.cps.app.model.Consultation;
 import com.cps.app.model.Facture;
 import com.cps.app.repo.FactureRepository;
@@ -48,6 +48,13 @@ public class FactureService {
 				.map(FactureMapper::toDto)
 				.toList();
 	}
+	
+	public double getActivitiesPrixTotal(Consultation c) {
+	    return c.getActivities()
+	            .stream()
+	            .mapToDouble(Activite::getPrix)
+	            .sum();
+	}
 
 	
 	// It's crucial that this method is @Transactional
@@ -73,11 +80,8 @@ public class FactureService {
 
 	    // 3. Now proceed with the creation logic in a try-catch for other unexpected errors
 	    try {        
-	        f.setMontant(req.montant());        
-	        f.setStatut(req.statut());
-	        if(req.statut().equals(FactureStatut.PAYEE)) {        	
-	        	f.setDatePaiment(req.datePaiment());
-	        }
+	        f.setMontant(getActivitiesPrixTotal(c) + c.getType().getPrix());
+	        f.setDatePaiment(req.datePaiment());
 	        
 	        // Link the entities bidirectionally
 	        f.setConsultation(c);
@@ -112,7 +116,6 @@ public class FactureService {
 			Facture f = getFactureById(id);
 			f.setMontant(body.getMontant());
 			f.setDatePaiment(body.getDatePaiment());
-			f.setStatut(body.getStatut());
 			
 			factureRepository.save(f);
 			FactureResponse factureDto = FactureMapper.toDto(f);

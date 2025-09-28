@@ -22,7 +22,6 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './gestion-patients.html'
 })
 export class GestionPatients {
-  sidebarItems: any = [];
   isOpen: boolean = true;
   visible_create: boolean = false;
   visible_edit: boolean = false;
@@ -58,7 +57,6 @@ export class GestionPatients {
   }
 
   showEditDialog(patient:Patient){
-
     this.fg.patchValue(patient);
     this.selectedPatientId = patient.id;
     this.visible_edit = true;
