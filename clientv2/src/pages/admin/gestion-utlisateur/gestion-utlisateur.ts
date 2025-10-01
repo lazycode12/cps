@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SideBar } from '../../../components/side-bar/side-bar';
 import { NavBar } from '../../../components/nav-bar/nav-bar';
-import { NgClass, NgFor } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Dialog } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -20,7 +20,6 @@ import { HttpOperationNotificationService } from '../../../services/http-operati
   templateUrl: './gestion-utlisateur.html'
 })
 export class GestionUtlisateur {
-  sidebarItems: any = [];
   isOpen: boolean = true;
   visible_create: boolean = false;
   visible_edit: boolean = false;

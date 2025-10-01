@@ -1,56 +1,45 @@
 package com.cps.app.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.cps.app.model.LogEntry;
-import com.cps.app.service.LogEntryService;
+import com.cps.app.repo.LogEntryRepository;
 
-import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/logs")
 public class LogController {
+
     
-    @Autowired
-    private LogEntryService logEntryService;
+    private final LogEntryRepository logRepository;
+    
+    public LogController(LogEntryRepository logRepository) {
+        this.logRepository = logRepository;
+    }
     
     @GetMapping("")
-    public ResponseEntity<Page<LogEntry>> getAllLogs(
+    public ResponseEntity<List<LogEntry>> getAllLogs(
+            @RequestParam(required = false) String level,
+            @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size) {
         
-        Page<LogEntry> logs = logEntryService.getAllLogs(page, size);
-        return ResponseEntity.ok(logs);
-    }
-    
-    @GetMapping("/level/{level}")
-    public ResponseEntity<Page<LogEntry>> getLogsByLevel(
-            @PathVariable String level,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "50") int size) {
+        List<LogEntry> logs = logRepository.findAll();
+      
         
-        Page<LogEntry> logs = logEntryService.getLogsByLevel(level, page, size);
-        return ResponseEntity.ok(logs);
-    }
-    
-    @GetMapping("/time-range")
-    public ResponseEntity<Page<LogEntry>> getLogsByTimeRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "50") int size) {
+        // Simple pagination
+        int start = Math.min(page * size, logs.size());
+        int end = Math.min((page + 1) * size, logs.size());
         
-        Page<LogEntry> logs = logEntryService.getLogsByTimeRange(start, end, page, size);
-        return ResponseEntity.ok(logs);
+        if (start >= logs.size()) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+        
+        List<LogEntry> paginatedLogs = logs.subList(start, end);
+        return ResponseEntity.ok(paginatedLogs);
     }
     
-    @PostMapping("")
-    public ResponseEntity<LogEntry> createLog(@RequestBody LogEntry logEntry) {
-        LogEntry savedLog = logEntryService.saveLog(logEntry);
-        return ResponseEntity.ok(savedLog);
-    }
 }

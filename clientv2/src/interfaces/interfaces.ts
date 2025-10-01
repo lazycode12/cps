@@ -92,3 +92,11 @@ export interface Produit {
   unite: string;
   categorie: string;
 }
+
+export interface LogEntry{
+    id: number;
+    level: string;
+    message: string;
+    logger: string;
+    timestamp: string;
+}

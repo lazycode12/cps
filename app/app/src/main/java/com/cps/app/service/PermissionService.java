@@ -25,11 +25,13 @@ public class PermissionService {
 	
 	private PermissionRepository permissionRepository;
 	private RoleService roleService;
+	private LogEntryService logEntryService;
 	
 	
-	public PermissionService(PermissionRepository permissionRepository, RoleService roleService) {
+	public PermissionService(PermissionRepository permissionRepository, RoleService roleService, LogEntryService logEntryService) {
 		this.permissionRepository = permissionRepository;
 		this.roleService = roleService;
+		this.logEntryService = logEntryService;
 	}
 
 	public Permission getPermissionById(Long id) {
@@ -37,6 +39,7 @@ public class PermissionService {
 				.orElseThrow(() -> new EntityNotFoundException("Permission not found with id: " + id));
 	}
 	public List<PermissionResponse> getAllPermissions(){
+		logEntryService.info("toutes les Permissions sont récupérées", "PermissionService");
 		return permissionRepository
 				.findAll()
 				.stream()
@@ -72,6 +75,7 @@ public class PermissionService {
 	    	
 	    	
 	        SuccessResponse<Void> successResponse = new SuccessResponse<>("permission a été créée avec succès", null);
+	        logEntryService.info("permission a été créée avec succès", "PermissionService");
 	        return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
 	    }catch (DataAccessException e) {
 	        ErrorResponse<Void> errorResponse = new ErrorResponse<>("Erreur de base de données", null);
@@ -79,6 +83,7 @@ public class PermissionService {
 	    }
 	    catch (Exception e) {
 	        ErrorResponse<Void> errorResponse = new ErrorResponse<>("Échec de la création de permission", null);
+	        logEntryService.error("Échec de la création de permission", "PermissionService");
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
@@ -93,9 +98,11 @@ public class PermissionService {
 			permissionRepository.save(p);
 			PermissionResponse permissionDto = PermissionMapper.toDto(p);
 	        SuccessResponse<PermissionResponse> successResponse = new SuccessResponse<>("permission a été mise à jour avec succès", permissionDto);
+	        logEntryService.info("permission a été mise à jour avec succès avec id: "+id.toString(), "PermissionService");
 	        return ResponseEntity.status(HttpStatus.OK).body(successResponse);
 	    } catch (Exception e) {
 	        ErrorResponse<PermissionResponse> errorResponse = new ErrorResponse<>("échec de la mise à jour de permission", null);
+	        logEntryService.error("échec de la mise à jour de permission avec id: "+id.toString(), "PermissionService");
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
@@ -106,9 +113,11 @@ public class PermissionService {
 		PermissionResponse permissionDto = PermissionMapper.toDto(a);
 		permissionRepository.delete(a);
         SuccessResponse<PermissionResponse> successResponse = new SuccessResponse<>("permission a été supprimée avec succès", permissionDto);
+        logEntryService.info("permission a été supprimée avec succès avec id: "+id.toString(), "PermissionService");
         return ResponseEntity.status(HttpStatus.OK).body(successResponse);
     } catch (Exception e) {
         ErrorResponse<PermissionResponse> errorResponse = new ErrorResponse<>("échec de la suppression de permission", null);
+        logEntryService.error("échec de la suppression de permission avec id: "+id.toString(), "PermissionService");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 	}

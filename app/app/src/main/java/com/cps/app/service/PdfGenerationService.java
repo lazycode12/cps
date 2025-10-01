@@ -28,12 +28,12 @@ import com.itextpdf.layout.properties.UnitValue;
 public class PdfGenerationService {
 	
 	private ConsultationService consultationService;
+	private LogEntryService logEntryService;
 	
-	
-	
-	 public PdfGenerationService(ConsultationService consultationService, MedicamentRepository medicamentRepository) {
+	 public PdfGenerationService(ConsultationService consultationService, MedicamentRepository medicamentRepository, LogEntryService logEntryService) {
 		super();
 		this.consultationService = consultationService;
+		this.logEntryService = logEntryService;
 	}
 
 	 public byte[] generateOrdonance(OrdonanceRequest req) {
@@ -96,6 +96,7 @@ public class PdfGenerationService {
 		            .setTextAlignment(TextAlignment.RIGHT));
 		    
 		    document.close();
+		    logEntryService.info("ordonance a été generer avec succès", "PdfGenerationService");
 		    return out.toByteArray();
 		}
 
@@ -141,9 +142,11 @@ public class PdfGenerationService {
 	                    .setFontSize(14));
 
 	            document.close();
+	            logEntryService.info("facture a été generer avec succès", "PdfGenerationService");
 	            return baos.toByteArray();
 
 	        } catch (Exception e) {
+	        	logEntryService.error("echec dans la genration de facture", "PdfGenerationService");
 	            throw new RuntimeException("Erreur lors de la génération de la facture PDF", e);
 	        }
 	    }

@@ -25,13 +25,15 @@ public class FactureService {
 
 	private FactureRepository factureRepository;
 	private ConsultationService consultationService;
+	private LogEntryService logEntryService;
 	
 	
 	
-	public FactureService(FactureRepository factureRepository, ConsultationService consultationService) {
+	public FactureService(FactureRepository factureRepository, ConsultationService consultationService, LogEntryService logEntryService) {
 		super();
 		this.factureRepository = factureRepository;
 		this.consultationService = consultationService;
+		this.logEntryService = logEntryService;
 	}
 
 
@@ -42,6 +44,7 @@ public class FactureService {
 
 
 	public List<FactureResponse> getAllFactures(){
+		logEntryService.info("toutes les FactureS sont récupérées", "FactureService");
 		return factureRepository
 				.findAll()
 				.stream()
@@ -94,6 +97,7 @@ public class FactureService {
 	        
 	        FactureResponse factureDto = FactureMapper.toDto(f);
 	        SuccessResponse<FactureResponse> successResponse = new SuccessResponse<>("Facture a été créée avec succès", factureDto);
+	        logEntryService.info("Facture a été créée avec succès pour consultation id: "+req.consultationId().toString(),"FactureService");
 	        return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
 	        
 	    } catch (Exception e) {
@@ -101,6 +105,7 @@ public class FactureService {
 	        // Since this is inside a @Transactional method, this exception will automatically
 	        // mark the transaction for rollback and then re-throw it.
 	        // We catch it here to log it and return a nice message, but we must re-throw it!
+	    	logEntryService.error("Échec de la création de facture:pour consultation id: "+req.consultationId().toString(),"FactureService");
 	        throw new RuntimeException("Échec de la création de facture: " + e.getMessage(), e);
 	        
 	        // Alternatively, if you don't want to re-throw, you can explicitly roll back:
@@ -120,9 +125,11 @@ public class FactureService {
 			factureRepository.save(f);
 			FactureResponse factureDto = FactureMapper.toDto(f);
 	        SuccessResponse<FactureResponse> successResponse = new SuccessResponse<>("le facture a été mise à jour avec succès", factureDto);
+	        logEntryService.info("le facture a été mise à jour avec succès, id: "+id.toString(),"FactureService");
 	        return ResponseEntity.status(HttpStatus.OK).body(successResponse);
 	    } catch (Exception e) {
 	        ErrorResponse<FactureResponse> errorResponse = new ErrorResponse<>("échec de la mise à jour de facture", null);
+	        logEntryService.error("échec de la mise à jour de facture, id: "+id.toString(),"FactureService");
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
@@ -133,9 +140,11 @@ public class FactureService {
 		FactureResponse factureDto = FactureMapper.toDto(f);
 		factureRepository.delete(f);
         SuccessResponse<FactureResponse> successResponse = new SuccessResponse<>("le facture a été supprimée avec succès", factureDto);
+        logEntryService.info("le facture a été supprimée avec succès id: "+id.toString(),"FactureService");
         return ResponseEntity.status(HttpStatus.OK).body(successResponse);
     } catch (Exception e) {
         ErrorResponse<FactureResponse> errorResponse = new ErrorResponse<>("échec de la suppression de facture", null);
+        logEntryService.error("échec de la suppression de facture id: "+id.toString(),"FactureService");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 	}

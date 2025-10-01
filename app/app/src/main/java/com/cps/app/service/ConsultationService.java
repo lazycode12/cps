@@ -33,8 +33,9 @@ public class ConsultationService {
 	private RdvRepository rdvRepository;
 	private ActiviteRepository activiteRepository;
 	private TypeConsultationService typeConsultationService;
+	private LogEntryService logEntryService;
 	
-	public ConsultationService(ConsultationRepository consultationRepository, PatientService patientService,
+	public ConsultationService(ConsultationRepository consultationRepository, PatientService patientService, LogEntryService logEntryService,
 			RdvRepository rdvRepository, ActiviteRepository activiteRepository, TypeConsultationService typeConsultationService) {
 		super();
 		this.consultationRepository = consultationRepository;
@@ -42,11 +43,8 @@ public class ConsultationService {
 		this.rdvRepository = rdvRepository;
 		this.activiteRepository = activiteRepository;
 		this.typeConsultationService = typeConsultationService;
+		this.logEntryService = logEntryService;
 	}
-	
-	
-
-
 
 	public ConsultationRepository getConsultationRepository() {
 		return consultationRepository;
@@ -60,6 +58,7 @@ public class ConsultationService {
 
 
 	public List<ConsultationResponse> getAllConsultations() {
+		logEntryService.info("toutes les Consultations sont récupérées", "ConsultationService");
 	    return consultationRepository
 	            .findAll()
 	            .stream()
@@ -92,11 +91,12 @@ public class ConsultationService {
 	        
 	        ConsultationResponse ConsultationResponse = ConsultationMapper.toConsultationResponse(c);
 	        SuccessResponse<ConsultationResponse> successResponse = new SuccessResponse<>("Consultation  a été créée avec succès", ConsultationResponse);
-	        
+	        logEntryService.info("Consultation  a été créée avec succès", "ConsultationService");
 	        return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
 	        
 	    } catch (Exception e) {
 	        ErrorResponse<ConsultationResponse> errorResponse = new ErrorResponse<>("Échec de la création de Consultation " + e, null);
+	        logEntryService.error("Échec de la création de Consultation", "ConsultationService");
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
@@ -116,8 +116,9 @@ public class ConsultationService {
 			c.getActivities().addAll(activities);
 			
 			consultationRepository.save(c);
-			
+			logEntryService.info("l'ajoute des activites a la consultation "+req.consultationId().toString() +" avec succès", "ConsultationService");
 		}catch (Exception e) {
+			logEntryService.error("échec de l'ajoute des activites a la consultation "+req.consultationId().toString(), "ConsultationService");
 			throw new Exception("Failed to add activities", e);
 
 		}
@@ -134,9 +135,11 @@ public class ConsultationService {
 			consultationRepository.save(c);
 			ConsultationResponse ConsultationResponse = ConsultationMapper.toConsultationResponse(c);
 	        SuccessResponse<ConsultationResponse> successResponse = new SuccessResponse<>("Consultation a été mise à jour avec succès", ConsultationResponse);
+	        logEntryService.info("Consultation a été créée avec succès", "ConsultationService");
 	        return ResponseEntity.status(HttpStatus.OK).body(successResponse);
 	    } catch (Exception e) {
 	        ErrorResponse<ConsultationResponse> errorResponse = new ErrorResponse<>("échec de la mise à jour de Consultation", null);
+	        logEntryService.error("échec de la mise à jour de Consultation", "ConsultationService");
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
@@ -152,12 +155,13 @@ public class ConsultationService {
 		}
 		
 		consultationRepository.delete(c);
-		
+		logEntryService.info("Consultation  a été créée avec succès", "ConsultationService");
         SuccessResponse<ConsultationResponse> successResponse = new SuccessResponse<>("Consultation a été supprimée avec succès", ConsultationResponse);
         return ResponseEntity.status(HttpStatus.OK).body(successResponse);
         
     } catch (Exception e) {
         ErrorResponse<ConsultationResponse> errorResponse = new ErrorResponse<>("échec de la suppression de Consultation", null);
+        logEntryService.error("échec de la suppression de Consultation", "ConsultationService");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 	}

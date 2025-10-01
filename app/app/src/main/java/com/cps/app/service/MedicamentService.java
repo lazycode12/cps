@@ -16,10 +16,12 @@ import jakarta.persistence.EntityNotFoundException;
 public class MedicamentService {
 	
 	private MedicamentRepository medicamentRepository;
+	private LogEntryService logEntryService;
 
-	public MedicamentService(MedicamentRepository medicamentRepository) {
+	public MedicamentService(MedicamentRepository medicamentRepository, LogEntryService logEntryService) {
 		super();
 		this.medicamentRepository = medicamentRepository;
+		this.logEntryService = logEntryService;
 	}
 	
 	public Medicament getMedicamentById(Long id) {
@@ -28,6 +30,7 @@ public class MedicamentService {
 	}
 	
 	public List<MedicamentResponse> geAlltMedicaments(){
+		logEntryService.info("toutes les Medicaments sont récupérées", "MedicamentService");
 		return medicamentRepository
 				.findAll()
 				.stream()
@@ -43,7 +46,7 @@ public class MedicamentService {
     	m.setDescription(req.description());
 
     	m = medicamentRepository.save(m);
-        
+    	logEntryService.info("Medicament a été créée avec succès", "MedicamentService");
     	return MedicamentMapper.toMedicamentResponse(m);
 	    	
 	}
@@ -56,13 +59,14 @@ public class MedicamentService {
     	m.setDescription(req.description());
 
     	m = medicamentRepository.save(m);
-        
+    	logEntryService.info("le Medicament a été mise à jour avec succès, id: "+id.toString(),"MedicamentService");
     	return MedicamentMapper.toMedicamentResponse(m);
 	    	
 	}
 	
 	public void deleteMedicament(Long id) {
 		Medicament m = getMedicamentById(id);
+		logEntryService.info("le Medicament a été supprimée avec succès id: "+id.toString(),"MedicamentService");
 		medicamentRepository.delete(m);
 	}
 

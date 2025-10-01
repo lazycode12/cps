@@ -26,7 +26,6 @@
                 <ng-template #header>
                     <tr>
                         <th>montant</th>
-                        <th>statut</th>
                         <th>date de paiment</th>
                         <th>Actions</th>
                     </tr>
@@ -34,7 +33,6 @@
                 <ng-template #body let-facture>
                     <tr class="bg-white border-b">
                         <td class="px-6 py-4">{{facture.montant}}</td>
-                        <td class="px-6 py-4">{{facture.statut}}</td>
                         <td class="px-6 py-4">{{facture.datePaiment}}</td>
                         <td class="px-6 py-4">
                             <p-button (onClick)="showEditDialog(facture)"  icon="pi pi-pencil" [rounded]="true" [raised]="true"  severity="info" class="mx-3"></p-button>
@@ -60,7 +58,7 @@
             </div>
 
             <!-- statut -->
-            <div>
+            <!-- <div>
               <label class="block mb-2 text-sm font-medium" for="">statut</label>
               <select formControlName="statut" name="statut" class="w-full  mb-3 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
                   <option value="NON_PAYEE">Non payée</option>
@@ -69,7 +67,7 @@
                   <option value="ANNULEE">Annulée</option>
                   <option value="EN_ATTENTE">En attente de paiement</option>
               </select>
-            </div>
+            </div> -->
 
             <!-- date paiment -->
              @if (fg.get("statut")?.value == "PAYEE") {

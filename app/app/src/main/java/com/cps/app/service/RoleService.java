@@ -24,10 +24,12 @@ public class RoleService {
 
 	private RoleRepository roleRepository;
 	private PermissionRepository permissionRepository;
+	private LogEntryService logEntryService;
 	
-	public RoleService(RoleRepository roleRepository, PermissionRepository permissionRepository) {
+	public RoleService(RoleRepository roleRepository, PermissionRepository permissionRepository, LogEntryService logEntryService) {
 		this.roleRepository = roleRepository;
 		this.permissionRepository = permissionRepository;
+		this.logEntryService = logEntryService;
 	}
 	
 	
@@ -46,6 +48,7 @@ public class RoleService {
 	}
 	
 	public List<Role> getRolesByIds(List<Long> ids) {
+		logEntryService.info("toutes les Roles sont récupérées", "RoleService");
 		return roleRepository.findAllById(ids);
 	}
 	
@@ -76,9 +79,11 @@ public class RoleService {
 	        Role r = roleRepository.save(role);
 	        RoleResponse roleDto = RoleMapper.toDto(r);
 	        SuccessResponse<RoleResponse> successResponse = new SuccessResponse<>("le role  a été créée avec succès", roleDto);
+	        logEntryService.info("role a été créée avec succès", "RoleService");
 	        return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
 	    } catch (Exception e) {
 	        ErrorResponse<RoleResponse> errorResponse = new ErrorResponse<>("Échec de la création de role", null);
+	        logEntryService.error("role a été créée avec succès", "RoleService");
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
@@ -97,9 +102,11 @@ public class RoleService {
 			roleRepository.save(r);
 			RoleResponse roleDto = RoleMapper.toDto(r);
 	        SuccessResponse<RoleResponse> successResponse = new SuccessResponse<>("le role a été mise à jour avec succès", roleDto);
+	        logEntryService.info("le role a été mise à jour avec succès avec id: "+id.toString(), "RoleService");
 	        return ResponseEntity.status(HttpStatus.OK).body(successResponse);
 	    } catch (Exception e) {
 	        ErrorResponse<RoleResponse> errorResponse = new ErrorResponse<>("échec de la mise à jour de role"+e, null);
+	        logEntryService.error("échec de la mise à jour de rolec id: "+id.toString(), "RoleService");
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
@@ -110,9 +117,11 @@ public class RoleService {
 		RoleResponse roleDto = RoleMapper.toDto(r);
 		roleRepository.delete(r);
         SuccessResponse<RoleResponse> successResponse = new SuccessResponse<>("le role a été supprimée avec succès", roleDto);
+        logEntryService.info("le role a été supprimée avec succès avec id: "+id.toString(), "RoleService");
         return ResponseEntity.status(HttpStatus.OK).body(successResponse);
     } catch (Exception e) {
         ErrorResponse<RoleResponse> errorResponse = new ErrorResponse<>("échec de la suppression de role", null);
+        logEntryService.error("échec de la suppression de role avec id: "+id.toString(), "RoleService");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 	}

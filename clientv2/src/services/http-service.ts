@@ -410,9 +410,12 @@ export class HttpService {
     return this.delete(`medicaments/${id}`)
   }
 
-
-
   logout(){
     return this.http.post(`${this.baseUrl}logout`, {})
+  }
+
+  // ****************************** log ******************************
+  getAllLogs(){
+    return this.get<any>("logs")
   }
 }

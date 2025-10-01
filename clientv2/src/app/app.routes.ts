@@ -13,6 +13,7 @@ import { Statistics } from '../pages/statistics/statistics';
 import { CreateRdv } from '../pages/secretaire/create-rdv/create-rdv';
 import { TypeConsultation } from '../pages/secretaire/type-consultation/type-consultation';
 import { GestionProduits } from '../pages/admin/gestion-produits/gestion-produits';
+import { Logs } from '../pages/admin/logs/logs';
 
 export const routes: Routes = [
     {path: 'gestion-utilisateurs', component: GestionUtlisateur},
@@ -32,6 +33,7 @@ export const routes: Routes = [
 
     {path: 'consulter-statistiques', component: Statistics},
 
+    {path: 'logs', component: Logs},
     {path: 'login', component: Login},
     {path: '', component: Login},
 

@@ -21,9 +21,11 @@ import jakarta.persistence.EntityNotFoundException;
 public class PatientService {
 
 	private PatientRepository patientRepository;
+	private LogEntryService logEntryService;
 
-	public PatientService(PatientRepository patientRepository) {
+	public PatientService(PatientRepository patientRepository, LogEntryService logEntryService) {
 		this.patientRepository = patientRepository;
+		this.logEntryService = logEntryService;
 	}
 	
 	public Patient getPatientById(Long id) {
@@ -31,6 +33,7 @@ public class PatientService {
 				.orElseThrow(() -> new EntityNotFoundException("Patient not found with id: " + id));
 	}
 	public List<PatientResponse> getAllPatients(){
+		logEntryService.info("toutes les Patients sont récupérées", "PatientService");
 		return patientRepository
 				.findAll()
 				.stream()
@@ -46,9 +49,11 @@ public class PatientService {
 	        
 	        PatientResponse PatientDto = PatientMapper.toPatientResponse(p);
 	        SuccessResponse<PatientResponse> successResponse = new SuccessResponse<>("patient a été créée avec succès", PatientDto);
+	        logEntryService.info("toutes les Patients sont récupérées", "PatientService");
 	        return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
 	    } catch (Exception e) {
 	        ErrorResponse<PatientResponse> errorResponse = new ErrorResponse<>("Échec de la création de patient", null);
+	        logEntryService.info("toutes les Patients sont récupérées", "PatientService");
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
@@ -70,9 +75,11 @@ public class PatientService {
 			
 			PatientResponse PatientDto = PatientMapper.toPatientResponse(p);
 	        SuccessResponse<PatientResponse> successResponse = new SuccessResponse<>("patient a été mise à jour avec succès", PatientDto);
+	        logEntryService.info("patient a été mise à jour avec succès avec id: "+id.toString(), "PatientService");
 	        return ResponseEntity.status(HttpStatus.OK).body(successResponse);
 	    } catch (Exception e) {
 	        ErrorResponse<PatientResponse> errorResponse = new ErrorResponse<>("échec de la mise à jour de patient", null);
+	        logEntryService.error("échec de la mise à jour de patient avec id: "+id.toString(), "PatientService");
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
@@ -83,9 +90,11 @@ public class PatientService {
 		PatientResponse PatientDto = PatientMapper.toPatientResponse(a);
 		patientRepository.delete(a);
         SuccessResponse<PatientResponse> successResponse = new SuccessResponse<>("patient a été supprimée avec succès", PatientDto);
+        logEntryService.info("patient a été supprimée avec succès avec id: "+id.toString(), "PatientService");
         return ResponseEntity.status(HttpStatus.OK).body(successResponse);
     } catch (Exception e) {
         ErrorResponse<PatientResponse> errorResponse = new ErrorResponse<>("échec de la suppression de patient", null);
+        logEntryService.error("échec de la suppression de patient avec id: "+id.toString(),"PatientService");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 	}

@@ -32,12 +32,14 @@ public class DocumentMedicalService {
 	
 	private DocumentMedicalRepository documentMedicalRepository;
 	private PatientService patientService;
+	private LogEntryService logEntryService;
 	
 	private final Path rootLocation = Paths.get("uploads");
 	
-	public DocumentMedicalService(DocumentMedicalRepository documentMedicalRepository, PatientService patientService) {
+	public DocumentMedicalService(DocumentMedicalRepository documentMedicalRepository, PatientService patientService, LogEntryService logEntryService) {
 		this.documentMedicalRepository = documentMedicalRepository;
 		this.patientService = patientService;
+		this.logEntryService = logEntryService;
 	}
 
 
@@ -79,17 +81,20 @@ public class DocumentMedicalService {
         	DocumentMedical d = documentMedicalRepository.save(medicalFile);
         	
         	DocumentMedicalResponse documentMedicalDto = DocumentMedicalMapper.toDto(d);
-	        SuccessResponse<DocumentMedicalResponse> successResponse = new SuccessResponse<>("le document a été téléchargé avec succès", documentMedicalDto);
+	        SuccessResponse<DocumentMedicalResponse> successResponse = new SuccessResponse<>("le document a été téléchargé avec succès" , documentMedicalDto);
+	        logEntryService.info("document a été téléchargé avec succès pour le patient avec id: " + req.patientId().toString(), "DocumentMedicalService");
 	        return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
         	
         }catch (Exception e) {
-	        ErrorResponse<DocumentMedicalResponse> errorResponse = new ErrorResponse<>("échec du téléchargement du document" + e, null);
+	        ErrorResponse<DocumentMedicalResponse> errorResponse = new ErrorResponse<>("échec du téléchargement du document " + e, null);
+	        logEntryService.error("échec du téléchargement du document medical pour le patient avec id: "+req.patientId().toString(), "DocumentMedicalService");
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
         
 	}
 	
 	public List<DocumentMedicalResponse> findByPatientId(Long id){
+		logEntryService.info("toutes les documents medicales pour le patient  avec id "+ id.toString() + "sont récupérées", "DocumentMedicalService");
 		return documentMedicalRepository
 				.findByPatientId(id)
 				.stream()
@@ -98,6 +103,7 @@ public class DocumentMedicalService {
 	}
 
 	public List<DocumentMedicalResponse> getAllDocuments(){
+		logEntryService.info("toutes les documents medicales sont récupérées", "DocumentMedicalService");
 		return documentMedicalRepository
 				.findAll()
 				.stream()
@@ -106,6 +112,7 @@ public class DocumentMedicalService {
 	}
 	
 	public DocumentMedical getDocumentMedicalById(Long id) {
+		logEntryService.info("Document Medical récupérée avec id: "+id, "DocumentMedicalService");
 		return documentMedicalRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("DocumentMedical not found with id: " + id));
 	}
@@ -115,10 +122,12 @@ public class DocumentMedicalService {
 		DocumentMedical d = getDocumentMedicalById(id);
 		DocumentMedicalResponse activityDto = DocumentMedicalMapper.toDto(d);
 		documentMedicalRepository.delete(d);
-        SuccessResponse<DocumentMedicalResponse> successResponse = new SuccessResponse<>("Document medical a été supprimée avec succès", activityDto);
+        SuccessResponse<DocumentMedicalResponse> successResponse = new SuccessResponse<>("Document medical a été supprimée avec succès id: "+id.toString(), activityDto);
+        logEntryService.info("toutes les Consultations sont récupérées", "DocumentMedicalService");
         return ResponseEntity.status(HttpStatus.OK).body(successResponse);
     } catch (Exception e) {
-        ErrorResponse<DocumentMedicalResponse> errorResponse = new ErrorResponse<>("échec de la suppression de l'activité", null);
+        ErrorResponse<DocumentMedicalResponse> errorResponse = new ErrorResponse<>("échec de la suppression de Document medical id: "+id.toString(), null);
+        logEntryService.error("échec de la suppression de Document medical id : "+id.toString(), "DocumentMedicalService");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 	}

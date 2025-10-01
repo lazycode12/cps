@@ -24,10 +24,12 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class ProduitService {
 	private ProduitRepository produitRepository;
+	private LogEntryService logEntryService;
 	
-	public ProduitService(ProduitRepository produitRepository) {
+	public ProduitService(ProduitRepository produitRepository, LogEntryService logEntryService) {
 		super();
 		this.produitRepository = produitRepository;
+		this.logEntryService = logEntryService;
 	}
 
 
@@ -40,6 +42,7 @@ public class ProduitService {
 
 
 	public List<Produit> getAllProduits(){
+		logEntryService.info("toutes les Produits sont récupérées", "ProduitService");
 		return produitRepository.findAll();
 	}
 
@@ -54,9 +57,12 @@ public class ProduitService {
 			p.setQuantite(req.getQuantite());
 			p.setSeuilReapprovisionnement(req.getSeuilReapprovisionnement());
 			
+			logEntryService.info("permission a été créée avec succès", "ProduitService");
+			
 			produitRepository.save(p);
 
 	    } catch (Exception e) {
+	    	logEntryService.error("Échec de la création de Produit", "ProduitService");
 	    	throw new Exception("error in creatiang the product" + e.getMessage());
 	    }
 	}
@@ -73,8 +79,9 @@ public class ProduitService {
 			p.setSeuilReapprovisionnement(body.getSeuilReapprovisionnement());
 			
 			produitRepository.save(p);
-			
+			logEntryService.info("produit a été mise à jour avec succès avec id: "+id.toString(), "ProduitService");
 	    } catch (Exception e) {
+	    	logEntryService.error("échec de la mise à jour produit avec id: "+id.toString(), "ProduitService");
 	    	throw new Exception("error with updating the product");
 	    }
 	}
@@ -84,8 +91,10 @@ public class ProduitService {
 			
 			Produit p = getProduitById(id);
 			produitRepository.delete(p);
+			logEntryService.info("produit a été supprimée avec succès avec id: "+id.toString(), "ProduitService");
 		
     } catch (Exception e) {
+    	logEntryService.error("échec de la suppression de produit avec id: "+id.toString(), "ProduitService");
     	throw new Exception("error in deleting the product");
     }
 	}

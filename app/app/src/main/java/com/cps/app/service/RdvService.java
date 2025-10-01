@@ -26,13 +26,15 @@ public class RdvService {
 	private RdvRepository rdvRepository;
 	private ConsultationRepository consultationRepository;
 	private ConsultationService consultationService;
+	private LogEntryService logEntryService;
 	
 	public RdvService(RdvRepository rdvRepository, ConsultationRepository consultationRepository,
-			ConsultationService consultationService) {
+			ConsultationService consultationService, LogEntryService logEntryService) {
 		super();
 		this.rdvRepository = rdvRepository;
 		this.consultationRepository = consultationRepository;
 		this.consultationService = consultationService;
+		this.logEntryService = logEntryService;
 	}
 
 
@@ -45,6 +47,7 @@ public class RdvService {
 
 
 	public List<RdvResponse> getAllRdv(){
+		logEntryService.info("toutes les rendez-vous sont récupérées", "RdvService");
 		return rdvRepository
 				.findAll()
 				.stream()
@@ -71,9 +74,11 @@ public class RdvService {
 			
 	        RdvResponse rdvDto = RdvMapper.toRdvResponse(rdv);
 	        SuccessResponse<RdvResponse> successResponse = new SuccessResponse<>("Rdv  a été créée avec succès", rdvDto);
+	        logEntryService.info("Rdv a été créée avec succès", "RdvService");
 	        return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
 	    } catch (Exception e) {
 	        ErrorResponse<RdvResponse> errorResponse = new ErrorResponse<>("Échec de la création de Rdv " + e , null);
+	        logEntryService.error("Échec de la création de Rdv", "RdvService");
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
@@ -89,9 +94,11 @@ public class RdvService {
 			rdvRepository.save(r);
 			RdvResponse RdvResponse = RdvMapper.toRdvResponse(r);
 	        SuccessResponse<RdvResponse> successResponse = new SuccessResponse<>("Rdv a été mise à jour avec succès", RdvResponse);
+	        logEntryService.info("Rdv a été mise à jour avec succès avec id: "+id.toString(), "ProduitService");
 	        return ResponseEntity.status(HttpStatus.OK).body(successResponse);
 	    } catch (Exception e) {
 	        ErrorResponse<RdvResponse> errorResponse = new ErrorResponse<>("échec de la mise à jour de Rdv", null);
+	        logEntryService.error("échec de la mise à jour de Rdv avec id: "+id.toString(), "ProduitService");
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
@@ -113,9 +120,11 @@ public class RdvService {
 		rdvRepository.delete(r);
 		
         SuccessResponse<RdvResponse> successResponse = new SuccessResponse<>("Rdv a été supprimée avec succès", RdvResponse);
+        logEntryService.info("Rdv a été supprimée avec succès avec id: "+id.toString(), "ProduitService");
         return ResponseEntity.status(HttpStatus.OK).body(successResponse);
     } catch (Exception e) {
         ErrorResponse<RdvResponse> errorResponse = new ErrorResponse<>("échec de la suppression de Rdv", null);
+        logEntryService.error("échec de la suppression de Rdv avec id: "+id.toString(), "ProduitService");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 	}

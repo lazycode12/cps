@@ -1,7 +1,6 @@
 package com.cps.app.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "log_entries")
@@ -17,19 +16,23 @@ public class LogEntry {
     private String message;
     
     @Column(nullable = false)
-    private String logger;
+    private String loggerName;
     
     @Column(nullable = false)
-    private LocalDateTime timestamp;
+    private String timestamp;
+    
+    @Column(name="user")
+    private String user;
     
     // Constructors
     public LogEntry() {}
     
-    public LogEntry(String level, String message, String logger, LocalDateTime timestamp) {
+    public LogEntry(String level, String message, String loggerName, String timestamp, String user) {
         this.level = level;
         this.message = message;
-        this.logger = logger;
+        this.loggerName = loggerName;
         this.timestamp = timestamp;
+        this.user = user;
     }
     
     // Getters and Setters
@@ -42,9 +45,26 @@ public class LogEntry {
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
     
-    public String getLogger() { return logger; }
-    public void setLogger(String logger) { this.logger = logger; }
+    public String getLogger() { return loggerName; }
+    public void setLogger(String logger) { this.loggerName = logger; }
     
-    public LocalDateTime getTimestamp() { return timestamp; }
-    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
+    public String getTimestamp() { return timestamp; }
+    public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
+
+	public String getLoggerName() {
+		return loggerName;
+	}
+
+	public void setLoggerName(String loggerName) {
+		this.loggerName = loggerName;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+    
 }

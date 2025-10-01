@@ -21,11 +21,13 @@ public class UserService {
     private final UserRepository userRepository;
     private RoleService rs;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    private LogEntryService logEntryService;
 	
-	public UserService(UserRepository userRepository, RoleService rs) {
+	public UserService(UserRepository userRepository, RoleService rs, LogEntryService logEntryService) {
 		super();
 		this.userRepository = userRepository;
 		this.rs = rs;
+		this.logEntryService = logEntryService;
 	}
 
 
@@ -36,6 +38,7 @@ public class UserService {
 	}
 	
 	public List<UserDtoResponse> getAllUsers() {
+		logEntryService.info("toutes les Users sont récupérées", "UserService");
 		return userRepository
 				.findAll()
 				.stream()
@@ -54,6 +57,7 @@ public class UserService {
 		u.setRole(rs.getRoleById(user.roleId()));
 		
 		User u2 = this.userRepository.save(u);
+		logEntryService.info("User a été créée avec succès", "UserService");
 		return UserMapper.toDto(u2);
 	}
 	
@@ -68,10 +72,12 @@ public class UserService {
 		u.setRole(rs.getRoleById(user.roleId()));
 		
 		UserMapper.toDto(userRepository.save(u));
+		logEntryService.info("User a été mise à jour avec succès avec id: "+id.toString(), "UserService");
 	}
 	
 	public void deleteUser(Long id) {
 		User u = getUserById(id);
 		userRepository.delete(u);
+		logEntryService.info("User a été supprimée avec succès avec id: "+id.toString(), "UserService");
 	}
 }

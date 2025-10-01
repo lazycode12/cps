@@ -1,7 +1,9 @@
 package com.cps.app.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,31 +18,38 @@ import com.cps.app.dto.response.ActiviteResponse;
 import com.cps.app.mapper.ActivityMapper;
 import com.cps.app.model.Activite;
 import com.cps.app.model.Consultation;
+import com.cps.app.model.LogEntry;
 import com.cps.app.repo.ActiviteRepository;
+import com.cps.app.repo.LogEntryRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ActiviteService {
+	
+    @Autowired
+    private LogEntryRepository logEntryRepository;
 
 	private ActiviteRepository activiteRepository;
 	private ConsultationService consultationService;
+	private LogEntryService logEntryService;
 	
-	private static final Logger logger = LoggerFactory.getLogger(ActiviteService.class);
-	
-	public ActiviteService(ActiviteRepository activiteRepository, ConsultationService consultationService) {
+	public ActiviteService(ActiviteRepository activiteRepository, ConsultationService consultationService, LogEntryService logEntryService) {
 		super();
 		this.activiteRepository = activiteRepository;
 		this.consultationService = consultationService;
-		logger.info("ActiviteService initialized");
+		this.logEntryService = logEntryService;
+		
+		logEntryService.info("ActiviteService initialized", "ActiviteService");
 	}
 	public Activite getActiviteById(Long id) {
-		 logger.debug("Searching for activity with ID: {}", id);
+		 
 		return activiteRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Activite not found with id: " + id));
 	}
 	
 	public List<ActiviteResponse> getAllActivites(){
+		logEntryService.info("toutes les activités sont récupérées", "ActiviteService");
 		return activiteRepository
 				.findAll()
 				.stream()
@@ -62,12 +71,14 @@ public class ActiviteService {
 	    	
 	    	
 	        a = activiteRepository.save(a);
+	        logEntryService.info("Activite a été créée avec succès", "ActiviteService");
 	        
 	        ActiviteResponse activityDto = ActivityMapper.toActiviteResponse(a);
 	        SuccessResponse<ActiviteResponse> successResponse = new SuccessResponse<>("L'activité a été créée avec succès", activityDto);
 	        return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
 	    } catch (Exception e) {
 	        ErrorResponse<ActiviteResponse> errorResponse = new ErrorResponse<>("Échec de la création de l'activité", null);
+	        logEntryService.error("Échec de la création de l'activité", "ActiviteService");
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
@@ -83,9 +94,11 @@ public class ActiviteService {
 			activiteRepository.save(a);
 			ActiviteResponse activityDto = ActivityMapper.toActiviteResponse(a);
 	        SuccessResponse<ActiviteResponse> successResponse = new SuccessResponse<>("l'activité a été mise à jour avec succès", activityDto);
+	        logEntryService.info("l'activité a été mise à jour avec succès", "ActiviteService");
 	        return ResponseEntity.status(HttpStatus.OK).body(successResponse);
 	    } catch (Exception e) {
 	        ErrorResponse<ActiviteResponse> errorResponse = new ErrorResponse<>("échec de la mise à jour de l'activité", null);
+	        logEntryService.error("échec de la mise à jour de l'activité", "ActiviteService");
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 	    }
 	}
@@ -96,9 +109,11 @@ public class ActiviteService {
 		ActiviteResponse activityDto = ActivityMapper.toActiviteResponse(a);
 		activiteRepository.delete(a);
         SuccessResponse<ActiviteResponse> successResponse = new SuccessResponse<>("l'activité a été supprimée avec succès", activityDto);
+        logEntryService.info("l'activité a été supprimée avec succès", "ActiviteService");
         return ResponseEntity.status(HttpStatus.OK).body(successResponse);
     } catch (Exception e) {
         ErrorResponse<ActiviteResponse> errorResponse = new ErrorResponse<>("échec de la suppression de l'activité", null);
+        logEntryService.error("échec de la suppression de l'activité", "ActiviteService");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 	}

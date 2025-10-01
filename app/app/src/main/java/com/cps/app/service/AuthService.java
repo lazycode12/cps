@@ -19,15 +19,17 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
+    private LogEntryService logEntryService;
     
     
 
     public AuthService(AuthenticationManager authenticationManager, UserDetailsService userDetailsService,
-			JwtUtil jwtUtil, UserRepository userRepository) {
+			JwtUtil jwtUtil, UserRepository userRepository, LogEntryService logEntryService) {
 		super();
 		this.authenticationManager = authenticationManager;
 		this.userDetailsService = userDetailsService;
 		this.jwtUtil = jwtUtil;
+		this.logEntryService = logEntryService;
 	}
 
 
@@ -41,6 +43,7 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
          
         final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.email());
+        logEntryService.info("tentative de connexion", "AuthService");
         return jwtUtil.generateToken(userDetails);
     }
 
