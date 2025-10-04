@@ -1,0 +1,28 @@
+2025-10-04 10:49:31 [restartedMain] INFO  com.cps.app.AppApplication - Starting AppApplication using Java 21.0.1 with PID 4228 (C:\Users\dell\Desktop\CPS\app\app\target\classes started by dell in C:\Users\dell\Desktop\CPS\app\app)
+2025-10-04 10:49:31 [restartedMain] DEBUG com.cps.app.AppApplication - Running with Spring Boot v3.5.4, Spring v6.2.9
+2025-10-04 10:49:31 [restartedMain] INFO  com.cps.app.AppApplication - No active profile set, falling back to 1 default profile: "default"
+2025-10-04 10:49:31 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-04 10:49:31 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-04 10:49:36 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-04 10:49:37 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 510 ms. Found 13 JPA repository interfaces.
+2025-10-04 10:49:41 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-10-04 10:49:41 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-04 10:49:41 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.43]
+2025-10-04 10:49:41 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-10-04 10:49:41 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 9791 ms
+2025-10-04 10:49:44 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-04 10:49:44 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-04 10:49:45 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@53214022
+2025-10-04 10:49:45 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-04 10:49:45 [restartedMain] WARN  org.hibernate.dialect.Dialect - HHH000511: The 5.5.5 version for [org.hibernate.dialect.MariaDBDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 10.4.0. Check the community dialects project for available legacy versions.
+2025-10-04 10:49:45 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-04 10:49:50 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-04 10:49:51 [restartedMain] DEBUG c.c.a.c.JwtAuthorizationFilter - Filter 'jwtAuthorizationFilter' configured for use
+2025-10-04 10:49:51 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-10-04 10:49:52 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-04 10:49:53 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-04 10:49:53 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-10-04 10:49:53 [restartedMain] INFO  com.cps.app.AppApplication - Started AppApplication in 25.412 seconds (process running for 28.635)
+2025-10-04 10:58:12 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-10-04 10:58:12 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-10-04 10:58:12 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 15 ms
