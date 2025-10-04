@@ -10,6 +10,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import { HttpOperationNotificationService } from '../../../services/http-operation-notification-service';
 import { MessageService } from 'primeng/api';
 import { Rdv } from '../../../interfaces/interfaces';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-create-rdv',
@@ -25,6 +26,15 @@ export class CreateRdv {
   events: EventInput[] = [];
   // services
   httpService : HttpService = inject(HttpService);
+  private route = inject(ActivatedRoute);
+
+  constructor(){
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id === null) {
+      throw new Error("Patient ID not found in route parameters.");
+    }
+    this.selectedConsultationId = id;
+  }
 
   rdv_fg = new FormGroup({
     motif : new FormControl(""),

@@ -11,7 +11,7 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HttpOperationNotificationService } from '../../../services/http-operation-notification-service';
 import { HttpService } from '../../../services/http-service';
 import { Consultation, Patient } from '../../../interfaces/interfaces';
@@ -52,6 +52,7 @@ export class GestionConsultation {
 // services
 httpService: HttpService = inject(HttpService);
 confirmationService: ConfirmationService = inject(ConfirmationService);
+router: Router = inject(Router);
 
 constructor(private fb: FormBuilder) {
   this.ordonnanceForm = this.fb.group({
@@ -152,9 +153,10 @@ generateOrdonance() {
     this.selectedConsultationId = consultation.id;
     this.visible_edit = true;
   }
-  showRdvCreateDialog(idConsultation: number){
-    this.selectedConsultationIdForRdv = idConsultation;
-    this.visible_rdv_create = true;
+  navigate(id: number){
+    // this.selectedConsultationIdForRdv = id;
+    // this.visible_rdv_create = true;
+    this.router.navigate(["/create-rdvs", id])
   }
 
   showFactureCreateDialog(idConsultation: number){

@@ -1,12 +1,14 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
 /client
+/Cahier_des_Charges_Cabinet_Medical.docx
 
 # Compiled output
 /clientv2/dist
 /clientv2/tmp
 /clientv2/out-tsc
 /clientv2/bazel-out
+
 
 # Node
 /clientv2/node_modules

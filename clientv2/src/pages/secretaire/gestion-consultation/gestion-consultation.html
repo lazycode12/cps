@@ -49,7 +49,7 @@
                       @if (consultation.rdv) {
                         <p-button (onClick)="showRdvViewDialog(consultation.rdv)"  icon="pi pi-eye" [rounded]="true" [raised]="true"  severity="warn" class="mx-3"></p-button>
                       }@else {
-                        <p-button (onClick)="showRdvCreateDialog(consultation.id)"  icon="pi pi-plus" [rounded]="true" [raised]="true"  severity="help" class="mx-3"></p-button>
+                        <p-button (onClick)="navigate(consultation.id)"  icon="pi pi-plus" [rounded]="true" [raised]="true"  severity="help" class="mx-3"></p-button>
                       }
                     </td>
                     <td class="px-6 py-4">

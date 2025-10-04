@@ -25,7 +25,7 @@ export const routes: Routes = [
     {path: 'gestion-consultations', component: GestionConsultation},
     {path: 'type-consultations', component: TypeConsultation},
     {path: 'gestion-rdvs', component: GestionRdvs},
-    {path: 'create-rdvs', component: CreateRdv},
+    {path: 'create-rdvs/:id', component: CreateRdv},
     {path: 'gestion-factures', component: GestionFactures},
     {path: 'gestion-produits', component: GestionProduits},
 
