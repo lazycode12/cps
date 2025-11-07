@@ -127,7 +127,7 @@ Vous êtes libre de l’utiliser, le modifier et le partager.
 ![gestion des rendez-vous](images/gestion-rendez-vous.png)
 
 ### Logs
-![Médecins](screenshots/logs.png)
+![logs](images/logs.png)
 
 
 
