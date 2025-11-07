@@ -32,8 +32,8 @@ L’objectif est de digitaliser la gestion médicale et d’offrir une interface
 #### 🛠️ Technologies utilisées
 | Catégorie  | Technologie |
 | ------------- |:-------------:|
-| Frontend      | Angular 17, TypeScript, HTML, CSS, Tailwind    |
-| Backend      | Spring Boot 3+, Java 17+|
+| Frontend      | Angular 20, TypeScript, HTML, CSS, Tailwind    |
+| Backend      | Spring Boot 3+, Java 21+|
 | Base de données      |    MySQL |
 |API | RESTful|
 | Sécurité | Spring Security|
@@ -98,7 +98,7 @@ npm start
 
 Le frontend sera accessible sur :
 ```
-👉 http://localhost:4200
+ http://localhost:4200
 ```
 
 🔗 Communication entre frontend et backend
@@ -118,23 +118,6 @@ export const environment = {
 Ce projet est distribué sous la licence MIT.
 Vous êtes libre de l’utiliser, le modifier et le partager.
 
-
-## Emphasis
-
-*This text will be italic*
-_This will also be italic_
-
-**This text will be bold**
-__This will also be bold__
-
-
-### Ordered
-
-1. Item 1
-2. Item 2
-3. Item 3
-    1. Item 3a
-    2. Item 3b
 
 ## captures d'écran
 ### Gestion de consultations
